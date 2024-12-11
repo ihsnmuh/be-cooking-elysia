@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String @id @default(uuid())
+  name      String
+  username  String @unique
+  email     String @unique
+  password  String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+  favorites Favorite[]
+  recipes   Recipe[]
+}
+
+model Session {
+  id String @id @default(uuid())
+  createdAt   DateTime @default(now())
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Recipe {
+  id          String @id @default(uuid())
+  title       String
+  description String?
+  cookingTime Int 
+  servings    Int
+  imageUrl    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String
+  user User @relation(fields: [userId], references: [id])
+
+  instructions  Instruction[]
+  ingredients   RecipeIngredient[]
+  categories    RecipeCategory[]
+  favorites     Favorite[]
+}
+
+model Ingredient {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  recipes RecipeIngredient[]
+}
+
+model RecipeIngredient {
+  id            String   @id @default(uuid())
+  quantity      Float
+  unit          String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  recipeId      String
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+
+  ingredientId  String
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model Instruction {
+  id         String   @id @default(uuid())
+  stepNumber Int
+  text       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  recipeId   String
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+}
+
+model Category {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  imageUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  recipes RecipeCategory[]
+}
+
+model RecipeCategory {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  recipeId   String
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  
+  recipeId   String
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+}

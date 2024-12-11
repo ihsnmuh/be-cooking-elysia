@@ -9,10 +9,13 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"elysia": "latest"
+		"@prisma/client": "^6.0.1",
+		"elysia": "latest",
+		"prisma": "^6.0.1"
 	},
 	"devDependencies": {
-		"bun-types": "latest"
+		"bun-types": "latest",
+		"husky": "^9.1.7"
 	},
 	"module": "src/index.js"
 }
