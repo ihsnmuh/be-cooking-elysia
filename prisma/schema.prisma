@@ -19,18 +19,18 @@ model User {
 
   sessions  Session[]
   favorites Favorite[]
-  recipes   Recipe[]
+  receipts   Receipt[]
 }
 
 model Session {
-  id String @id @default(uuid())
-  createdAt   DateTime @default(now())
+  id        String @id @default(uuid())
+  createdAt DateTime @default(now())
 
-  userId String
+  userId    String
   user User @relation(fields: [userId], references: [id])
 }
 
-model Recipe {
+model Receipt {
   id          String @id @default(uuid())
   title       String
   description String?
@@ -44,8 +44,8 @@ model Recipe {
   user User @relation(fields: [userId], references: [id])
 
   instructions  Instruction[]
-  ingredients   RecipeIngredient[]
-  categories    RecipeCategory[]
+  ingredients   ReceiptIngredient[]
+  categories    ReceiptCategory[]
   favorites     Favorite[]
 }
 
@@ -56,21 +56,23 @@ model Ingredient {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  recipes RecipeIngredient[]
+  reciepts ReceiptIngredient[]
 }
 
-model RecipeIngredient {
+model ReceiptIngredient {
   id            String   @id @default(uuid())
   quantity      Float
   unit          String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  recipeId      String
-  recipe Recipe @relation(fields: [recipeId], references: [id])
+  receiptId      String
+  receipt Receipt @relation(fields: [receiptId], references: [id])
 
   ingredientId  String
   ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@index([receiptId, ingredientId])
 }
 
 model Instruction {
@@ -80,8 +82,8 @@ model Instruction {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   
-  recipeId   String
-  recipe Recipe @relation(fields: [recipeId], references: [id])
+  receiptId   String
+  receipt Receipt @relation(fields: [receiptId], references: [id])
 }
 
 model Category {
@@ -91,19 +93,21 @@ model Category {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  recipes RecipeCategory[]
+  receipts ReceiptCategory[]
 }
 
-model RecipeCategory {
+model ReceiptCategory {
   id         String   @id @default(uuid())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   
-  recipeId   String
-  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  receiptId   String
+  receipt     Receipt   @relation(fields: [receiptId], references: [id])
   
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
+
+  @@index([receiptId, categoryId])
 }
 
 model Favorite {
@@ -114,6 +118,6 @@ model Favorite {
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   
-  recipeId   String
-  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  receiptId   String
+  receipt     Receipt   @relation(fields: [receiptId], references: [id])
 }
