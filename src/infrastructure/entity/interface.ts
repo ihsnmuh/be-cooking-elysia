@@ -43,7 +43,7 @@ export type TUpdateFavorite = Omit<User, "id">;
 //* IUser
 export interface IUser {
 	getAll: () => Promise<User[]>;
-	getOne: (id: string) => Promise<User>;
+	getOne: (id: string) => Promise<User | null>;
 	create: (data: TCreateUser) => Promise<User>;
 	update: (id: string, data: TUpdateUser) => Promise<User>;
 	delete: (id: string) => Promise<void>;
