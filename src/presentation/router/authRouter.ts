@@ -43,7 +43,10 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 		"/login",
 		async ({ body, set }) => {
 			try {
-				const session = await authServices.loginUser(body.emailOrUsername, body.password);
+				const session = await authServices.loginUser(
+					body.emailOrUsername,
+					body.password,
+				);
 
 				set.status = 200;
 				return { sessionId: session.id };
@@ -59,12 +62,10 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			body: t.Object({
-				emailOrUsername: t.Union(
-					[
-						t.String({format: "email"}),
-						t.String({minLength: 4}),
-					]
-				),
+				emailOrUsername: t.Union([
+					t.String({ format: "email" }),
+					t.String({ minLength: 4 }),
+				]),
 				password: t.String({ minLength: 8 }),
 			}),
 		},
@@ -74,7 +75,7 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 	.post(
 		"/logout",
 		async ({ body, set }) => {
-			console.log("🚀 ~ body:", body)
+			console.log("🚀 ~ body:", body);
 			try {
 				const sessionId = body.sessionId;
 
