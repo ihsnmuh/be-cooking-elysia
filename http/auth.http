@@ -1,0 +1,35 @@
+### Register
+POST http://localhost:3000/api/v1/register
+Content-Type: application/json
+
+{
+    "name": "ihsan",
+    "email": "ihsan2@mail.com",
+    "username": "ihsan",
+    "password": "qwerty123"
+}
+
+### Login
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{
+    "emailOrUsername": "ihsan2@mail.com",
+    "password": "qwerty123"
+}
+
+### Logout
+POST http://localhost:3000/api/v1/logout
+Content-Type: application/json
+
+{
+    "sessionId": "ab717c04-b4f1-4c2b-95e7-5457cbee048f"
+}
+
+### Check Session
+POST http://localhost:3000/api/v1/session
+Content-Type: application/json
+
+{
+    "sessionId": "ff7b48b4-a04e-44e9-b1ef-55ba4988c052"
+}

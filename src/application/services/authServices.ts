@@ -6,6 +6,7 @@ import {
 	NotFoundError,
 } from "../../infrastructure/entity/error";
 import { TYPES } from "../../infrastructure/entity/type";
+import { userDTO } from "../dtos/userDTO";
 
 @injectable()
 export class AuthServices {
@@ -20,7 +21,12 @@ export class AuthServices {
 		this.sessionRepo = sessionRepo;
 	}
 
-	async registerUser(name: string, email: string, password: string) {
+	async registerUser(
+		name: string,
+		email: string,
+		username: string,
+		password: string,
+	) {
 		// check collision => email/user available
 		const user = await this.userRepo.getOne(email);
 
@@ -35,15 +41,16 @@ export class AuthServices {
 		const newUser = await this.userRepo.create({
 			name,
 			email,
+			username,
 			password: hashedPassword,
 			avatar: "",
 		});
 
-		return newUser;
+		return new userDTO(newUser).fromEntity();
 	}
 
-	async loginUser(email: string, password: string) {
-		const user = await this.userRepo.getOne(email);
+	async loginUser(emailOrUsername: string, password: string) {
+		const user = await this.userRepo.getOne(emailOrUsername);
 
 		if (!user) {
 			throw new NotFoundError("User not Found");
