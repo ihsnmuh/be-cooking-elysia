@@ -8,6 +8,7 @@ import {
 } from "../../infrastructure/entity/error";
 import { TYPES } from "../../infrastructure/entity/type";
 import { userDTO } from "../dtos/userDTO";
+import type { Role } from "@prisma/client";
 
 @injectable()
 export class AuthServices {
@@ -26,6 +27,7 @@ export class AuthServices {
 		name: string,
 		email: string,
 		username: string,
+		role: Role,
 		password: string,
 	) {
 		// check collision => email/user available
@@ -43,6 +45,7 @@ export class AuthServices {
 			name,
 			email,
 			username,
+			role,
 			password: hashedPassword,
 			avatar: "",
 		});

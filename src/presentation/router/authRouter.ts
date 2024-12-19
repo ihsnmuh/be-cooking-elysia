@@ -12,6 +12,7 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 					body.name,
 					body.email,
 					body.username,
+					body.role,
 					body.password,
 				);
 
@@ -33,6 +34,7 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 				name: t.String({ minLength: 3 }),
 				email: t.String({ format: "email" }),
 				username: t.String({ minLength: 4 }),
+				role: t.Enum({ ADMIN: "ADMIN", USER: "USER" }),
 				password: t.String({ minLength: 8 }),
 			}),
 		},
