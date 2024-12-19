@@ -77,8 +77,8 @@ export interface IRecipe {
 //* IIngredient
 export interface IIngredient {
 	getAll: () => Promise<Ingredient[]>;
+	getAllByRecipeId: (recipeId: string) => Promise<Ingredient[]>;
 	getOne: (id: string) => Promise<Ingredient>;
-	getRecipes: (ingredientId: string) => Promise<Recipe[]>;
 	create: (data: TCreateIngredient) => Promise<Ingredient>;
 	update: (id: string, data: TUpdateIngredient) => Promise<Ingredient>;
 	delete: (id: string) => Promise<void>;
