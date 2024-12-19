@@ -1,0 +1,31 @@
+## Category
+
+### Get all categories
+GET http://localhost:3000/api/v1/categories
+
+### Get all categories by recipeId
+GET http://localhost:3000/api/v1/categories/recipe?recipeId=asdf
+
+### Get category by id or name
+GET http://localhost:3000/api/v1/categories/breakfast
+
+### Create a category
+POST http://localhost:3000/api/v1/categories
+Content-Type: application/json
+
+{
+    "name": "Breakfast",
+    "imageUrl": ""
+}
+
+### Update a category
+PATCH http://localhost:3000/api/v1/categories/8a04a2b3-ab6d-47e2-831d-b3cb54f57991
+Content-Type: application/json
+
+{
+    "name": "Brunch",
+    "imageUrl": ""
+}
+
+### Delete a category
+DELETE http://localhost:3000/api/v1/categories/8a04a2b3-ab6d-47e2-831d-b3cb54f57991
