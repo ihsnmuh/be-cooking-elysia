@@ -105,7 +105,7 @@ export interface IInstruction {
 //* Category
 export interface ICategory {
 	getAll: () => Promise<Category[]>;
-	getAllByReceiptId: (receiptId: string) => Promise<Category[]>;
+	getAllByReceiptId: (receiptId: string) => Promise<Category[] | undefined>;
 	getOne: (id: string) => Promise<Category>;
 	create: (data: TCreateCategory) => Promise<Category>;
 	update: (id: string, data: TUpdateCategory) => Promise<Category>;
