@@ -30,13 +30,13 @@ export class CategoryRepository implements ICategory {
 		}
 	}
 
-	async getAllByRecipeId(receiptId: string) {
+	async getAllByRecipeId(recipeId: string) {
 		try {
 			const categories = await this.prisma.category.findMany({
 				where: {
 					recipes: {
 						some: {
-							id: receiptId,
+							id: recipeId,
 						},
 					},
 				},

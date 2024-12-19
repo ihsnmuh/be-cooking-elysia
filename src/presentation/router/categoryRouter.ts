@@ -20,13 +20,13 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		}
 	})
 
-	// * Get all categories by receipt id
+	// * Get all categories by recipe id
 	.get(
 		"/categories",
 		async ({ set, query }) => {
 			try {
 				const categories = await categoryServices.getAllByRecipeId(
-					query.receiptId,
+					query.recipeId,
 				);
 
 				return categories;
@@ -42,7 +42,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			query: t.Object({
-				receiptId: t.String(),
+				recipeId: t.String(),
 			}),
 		},
 	)
