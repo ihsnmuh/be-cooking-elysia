@@ -13,32 +13,38 @@ import type {
 export type TCreateUser = Omit<User, "id" | "createdAt" | "updatedAt">;
 export type TUpdateUser = Omit<User, "id">;
 
-export type TCreateReceipt = Omit<User, "id" | "createdAt" | "updatedAt">;
-export type TUpdateReceipt = Omit<User, "id">;
+export type TCreateReceipt = Omit<Receipt, "id" | "createdAt" | "updatedAt">;
+export type TUpdateReceipt = Omit<Receipt, "id">;
 
-export type TCreateIngredient = Omit<User, "id" | "createdAt" | "updatedAt">;
-export type TUpdateIngredient = Omit<User, "id">;
+export type TCreateIngredient = Omit<
+	Ingredient,
+	"id" | "createdAt" | "updatedAt"
+>;
+export type TUpdateIngredient = Omit<Ingredient, "id">;
 
 export type TCreateReceiptIngredient = Omit<
-	User,
+	ReceiptIngredient,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateReceiptIngredient = Omit<User, "id">;
+export type TUpdateReceiptIngredient = Omit<ReceiptIngredient, "id">;
 
-export type TCreateInstruction = Omit<User, "id" | "createdAt" | "updatedAt">;
-export type TUpdateInstruction = Omit<User, "id">;
+export type TCreateInstruction = Omit<
+	Instruction,
+	"id" | "createdAt" | "updatedAt"
+>;
+export type TUpdateInstruction = Omit<Instruction, "id">;
 
-export type TCreateCategory = Omit<User, "id" | "createdAt" | "updatedAt">;
-export type TUpdateCategory = Omit<User, "id">;
+export type TCreateCategory = Omit<Category, "id" | "createdAt" | "updatedAt">;
+export type TUpdateCategory = Omit<Category, "id">;
 
 export type TCreateReceiptCategory = Omit<
-	User,
+	ReceiptCategory,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateReceiptCategory = Omit<User, "id">;
+export type TUpdateReceiptCategory = Omit<ReceiptCategory, "id">;
 
-export type TCreateFavorite = Omit<User, "id" | "createdAt" | "updatedAt">;
-export type TUpdateFavorite = Omit<User, "id">;
+export type TCreateFavorite = Omit<Favorite, "id" | "createdAt" | "updatedAt">;
+export type TUpdateFavorite = Omit<Favorite, "id">;
 
 //* IUser
 export interface IUser {
