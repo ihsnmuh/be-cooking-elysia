@@ -20,7 +20,7 @@ model User {
 
   sessions  Session[]
   favorites Favorite[]
-  receipts   Receipt[]
+  recipes   Recipe[]
 }
 
 model Session {
@@ -31,7 +31,7 @@ model Session {
   user User @relation(fields: [userId], references: [id])
 }
 
-model Receipt {
+model Recipe {
   id          String @id @default(uuid())
   title       String
   description String?
@@ -45,8 +45,8 @@ model Receipt {
   user User @relation(fields: [userId], references: [id])
 
   instructions  Instruction[]
-  ingredients   ReceiptIngredient[]
-  categories    ReceiptCategory[]
+  ingredients   RecipeIngredient[]
+  categories    RecipeCategory[]
   favorites     Favorite[]
 }
 
@@ -57,23 +57,23 @@ model Ingredient {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  reciepts ReceiptIngredient[]
+  recipes RecipeIngredient[]
 }
 
-model ReceiptIngredient {
+model RecipeIngredient {
   id            String   @id @default(uuid())
   quantity      Float
   unit          String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  receiptId      String
-  receipt Receipt @relation(fields: [receiptId], references: [id])
+  recipeId      String
+  recipe Recipe @relation(fields: [recipeId], references: [id])
 
   ingredientId  String
   ingredient Ingredient @relation(fields: [ingredientId], references: [id])
 
-  @@index([receiptId, ingredientId])
+  @@index([recipeId, ingredientId])
 }
 
 model Instruction {
@@ -83,8 +83,8 @@ model Instruction {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   
-  receiptId   String
-  receipt Receipt @relation(fields: [receiptId], references: [id])
+  recipeId   String
+  recipe Recipe @relation(fields: [recipeId], references: [id])
 }
 
 model Category {
@@ -94,21 +94,21 @@ model Category {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  receipts ReceiptCategory[]
+  recipes RecipeCategory[]
 }
 
-model ReceiptCategory {
+model RecipeCategory {
   id         String   @id @default(uuid())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   
-  receiptId   String
-  receipt     Receipt   @relation(fields: [receiptId], references: [id])
+  recipeId   String
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
   
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
 
-  @@index([receiptId, categoryId])
+  @@index([recipeId, categoryId])
 }
 
 model Favorite {
@@ -119,6 +119,6 @@ model Favorite {
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   
-  receiptId   String
-  receipt     Receipt   @relation(fields: [receiptId], references: [id])
+  recipeId   String
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
 }
