@@ -22,8 +22,8 @@ export class CategoryServices {
 	}
 
 	async getAllByRecipeId(recipeId: string) {
-		const category = await this.categoryRepo.getAllByRecipeId(recipeId);
-		return category;
+		const categories = await this.categoryRepo.getAllByRecipeId(recipeId);
+		return categories;
 	}
 
 	async getOne(categoryIdOrName: string) {
