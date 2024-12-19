@@ -22,7 +22,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 
 	// * Get all categories by recipe id
 	.get(
-		"/categories",
+		"/categories/recipe",
 		async ({ set, query }) => {
 			try {
 				const categories = await categoryServices.getAllByRecipeId(
@@ -66,12 +66,12 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 
 	// * Create category
 	.post(
-		"/category",
+		"/categories",
 		async ({ body, set }) => {
 			try {
 				const newCategory = await categoryServices.create({
-					name: body.name,
-					imageUrl: body.imageUrl,
+					name: body.name.toLocaleLowerCase(),
+					imageUrl: body.imageUrl ?? "",
 				});
 
 				set.status = 201;
@@ -89,21 +89,21 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		{
 			body: t.Object({
 				name: t.String(),
-				imageUrl: t.String({ format: "uri" }),
+				imageUrl: t.String(),
 			}),
 		},
 	)
 
 	// * Update category
 	.patch(
-		"/category/:categoryId",
+		"/categories/:categoryId",
 		async ({ body, params, set }) => {
 			try {
 				const updatedCategory = await categoryServices.update(
 					params.categoryId,
 					{
-						name: body.name,
-						imageUrl: body.imageUrl,
+						name: body.name?.toLocaleLowerCase(),
+						imageUrl: body.imageUrl ?? "",
 					},
 				);
 
@@ -121,13 +121,13 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		{
 			body: t.Object({
 				name: t.Optional(t.String()),
-				imageUrl: t.Optional(t.String({ format: "uri" })),
+				imageUrl: t.Optional(t.String()),
 			}),
 		},
 	)
 
 	// * Delete category
-	.delete("/category/:categoryId", async ({ params, set }) => {
+	.delete("/categories/:categoryId", async ({ params, set }) => {
 		try {
 			await categoryServices.delete(params.categoryId);
 
