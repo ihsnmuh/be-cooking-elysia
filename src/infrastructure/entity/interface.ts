@@ -11,7 +11,7 @@ import type {
 } from "@prisma/client";
 
 export type TCreateUser = Omit<User, "id" | "createdAt" | "updatedAt">;
-export type TUpdateUser = Omit<User, "id">;
+export type TUpdateUser = Partial<User>;
 
 export type TCreateReceipt = Omit<Receipt, "id" | "createdAt" | "updatedAt">;
 export type TUpdateReceipt = Omit<Receipt, "id">;
@@ -20,31 +20,31 @@ export type TCreateIngredient = Omit<
 	Ingredient,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateIngredient = Omit<Ingredient, "id">;
+export type TUpdateIngredient = Partial<Ingredient>;
 
 export type TCreateReceiptIngredient = Omit<
 	ReceiptIngredient,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateReceiptIngredient = Omit<ReceiptIngredient, "id">;
+export type TUpdateReceiptIngredient = Partial<ReceiptIngredient>;
 
 export type TCreateInstruction = Omit<
 	Instruction,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateInstruction = Omit<Instruction, "id">;
+export type TUpdateInstruction = Partial<Instruction>;
 
 export type TCreateCategory = Omit<Category, "id" | "createdAt" | "updatedAt">;
-export type TUpdateCategory = Omit<Category, "id">;
+export type TUpdateCategory = Partial<Category>;
 
 export type TCreateReceiptCategory = Omit<
 	ReceiptCategory,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateReceiptCategory = Omit<ReceiptCategory, "id">;
+export type TUpdateReceiptCategory = Partial<ReceiptCategory>;
 
 export type TCreateFavorite = Omit<Favorite, "id" | "createdAt" | "updatedAt">;
-export type TUpdateFavorite = Omit<Favorite, "id">;
+export type TUpdateFavorite = Partial<Favorite>;
 
 //* IUser
 export interface IUser {
