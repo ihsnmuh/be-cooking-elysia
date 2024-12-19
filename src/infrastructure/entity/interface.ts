@@ -3,9 +3,9 @@ import type {
 	Favorite,
 	Ingredient,
 	Instruction,
-	Receipt,
-	ReceiptCategory,
-	ReceiptIngredient,
+	Recipe,
+	RecipeCategory,
+	RecipeIngredient,
 	Session,
 	User,
 } from "@prisma/client";
@@ -13,8 +13,8 @@ import type {
 export type TCreateUser = Omit<User, "id" | "createdAt" | "updatedAt">;
 export type TUpdateUser = Partial<User>;
 
-export type TCreateReceipt = Omit<Receipt, "id" | "createdAt" | "updatedAt">;
-export type TUpdateReceipt = Omit<Receipt, "id">;
+export type TCreateRecipe = Omit<Recipe, "id" | "createdAt" | "updatedAt">;
+export type TUpdateRecipe = Omit<Recipe, "id">;
 
 export type TCreateIngredient = Omit<
 	Ingredient,
@@ -22,11 +22,11 @@ export type TCreateIngredient = Omit<
 >;
 export type TUpdateIngredient = Partial<Ingredient>;
 
-export type TCreateReceiptIngredient = Omit<
-	ReceiptIngredient,
+export type TCreateRecipeIngredient = Omit<
+	RecipeIngredient,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateReceiptIngredient = Partial<ReceiptIngredient>;
+export type TUpdateRecipeIngredient = Partial<RecipeIngredient>;
 
 export type TCreateInstruction = Omit<
 	Instruction,
@@ -37,11 +37,11 @@ export type TUpdateInstruction = Partial<Instruction>;
 export type TCreateCategory = Omit<Category, "id" | "createdAt" | "updatedAt">;
 export type TUpdateCategory = Partial<Category>;
 
-export type TCreateReceiptCategory = Omit<
-	ReceiptCategory,
+export type TCreateRecipeCategory = Omit<
+	RecipeCategory,
 	"id" | "createdAt" | "updatedAt"
 >;
-export type TUpdateReceiptCategory = Partial<ReceiptCategory>;
+export type TUpdateRecipeCategory = Partial<RecipeCategory>;
 
 export type TCreateFavorite = Omit<Favorite, "id" | "createdAt" | "updatedAt">;
 export type TUpdateFavorite = Partial<Favorite>;
@@ -62,15 +62,15 @@ export interface ISession {
 	delete: (sessionId: string) => Promise<void>;
 }
 
-//* IReceipt
-export interface IReceipt {
-	getAll: () => Promise<Receipt[]>;
-	getAllbyUser: (userId: string) => Promise<Receipt[]>;
-	getOne: (id: string) => Promise<Receipt>;
-	getOnebyUser: (id: string, userId: string) => Promise<Receipt>;
-	getIngredients: (receiptId: string) => Promise<Ingredient[]>;
-	create: (data: TCreateReceipt) => Promise<Receipt>;
-	update: (id: string, data: TUpdateReceipt) => Promise<Receipt>;
+//* IRecipe
+export interface IRecipe {
+	getAll: () => Promise<Recipe[]>;
+	getAllbyUser: (userId: string) => Promise<Recipe[]>;
+	getOne: (id: string) => Promise<Recipe>;
+	getOnebyUser: (id: string, userId: string) => Promise<Recipe>;
+	getIngredients: (recipeId: string) => Promise<Ingredient[]>;
+	create: (data: TCreateRecipe) => Promise<Recipe>;
+	update: (id: string, data: TUpdateRecipe) => Promise<Recipe>;
 	delete: (id: string) => Promise<void>;
 }
 
@@ -78,30 +78,30 @@ export interface IReceipt {
 export interface IIngredient {
 	getAll: () => Promise<Ingredient[]>;
 	getOne: (id: string) => Promise<Ingredient>;
-	getReceipts: (ingredientId: string) => Promise<Receipt[]>;
+	getRecipes: (ingredientId: string) => Promise<Recipe[]>;
 	create: (data: TCreateIngredient) => Promise<Ingredient>;
 	update: (id: string, data: TUpdateIngredient) => Promise<Ingredient>;
 	delete: (id: string) => Promise<void>;
 }
 
-//* IReceiptIngredient
-export interface IReceiptIngredient {
-	getAll: () => Promise<ReceiptIngredient[]>;
-	getOne: (id: string) => Promise<ReceiptIngredient>;
-	getByReceipt: (receiptId: string) => Promise<ReceiptIngredient[]>; // Semua relasi berdasarkan resep
-	getByIngredient: (ingredientId: string) => Promise<ReceiptIngredient[]>; // Semua relasi berdasarkan bahan
-	create: (data: TCreateReceiptIngredient) => Promise<ReceiptIngredient>;
+//* IRecipeIngredient
+export interface IRecipeIngredient {
+	getAll: () => Promise<RecipeIngredient[]>;
+	getOne: (id: string) => Promise<RecipeIngredient>;
+	getByRecipe: (recipeId: string) => Promise<RecipeIngredient[]>; // Semua relasi berdasarkan resep
+	getByIngredient: (ingredientId: string) => Promise<RecipeIngredient[]>; // Semua relasi berdasarkan bahan
+	create: (data: TCreateRecipeIngredient) => Promise<RecipeIngredient>;
 	update: (
 		id: string,
-		data: TUpdateReceiptIngredient,
-	) => Promise<ReceiptIngredient>;
+		data: TUpdateRecipeIngredient,
+	) => Promise<RecipeIngredient>;
 	delete: (id: string) => Promise<void>;
 }
 
 //* Instruction
 export interface IInstruction {
 	getAll: () => Promise<Instruction[]>;
-	getAllByReceiptId: (receiptId: string) => Promise<Instruction[]>;
+	getAllByRecipeId: (recipeId: string) => Promise<Instruction[]>;
 	getOne: (id: string) => Promise<Instruction>;
 	create: (data: TCreateInstruction) => Promise<Instruction>;
 	update: (id: string, data: TUpdateInstruction) => Promise<Instruction>;
@@ -111,7 +111,7 @@ export interface IInstruction {
 //* Category
 export interface ICategory {
 	getAll: () => Promise<Category[]>;
-	getAllByReceiptId: (receiptId: string) => Promise<Category[] | undefined>;
+	getAllByRecipeId: (recipeId: string) => Promise<Category[] | undefined>;
 	getOne: (id: string) => Promise<Category>;
 	create: (data: TCreateCategory) => Promise<Category>;
 	update: (id: string, data: TUpdateCategory) => Promise<Category>;
@@ -119,16 +119,13 @@ export interface ICategory {
 }
 
 //* RecipeCategory
-export interface IReceiptCategory {
-	getAll: () => Promise<ReceiptCategory[]>;
-	getOne: (id: string) => Promise<ReceiptCategory>;
-	getByReceiptId: (receiptId: string) => Promise<ReceiptCategory[]>;
-	getByCategoryId: (categoryId: string) => Promise<ReceiptCategory[]>;
-	create: (data: TCreateReceiptCategory) => Promise<ReceiptCategory>;
-	update: (
-		id: string,
-		data: TUpdateReceiptCategory,
-	) => Promise<ReceiptCategory>;
+export interface IRecipeCategory {
+	getAll: () => Promise<RecipeCategory[]>;
+	getOne: (id: string) => Promise<RecipeCategory>;
+	getByRecipeId: (recipeId: string) => Promise<RecipeCategory[]>;
+	getByCategoryId: (categoryId: string) => Promise<RecipeCategory[]>;
+	create: (data: TCreateRecipeCategory) => Promise<RecipeCategory>;
+	update: (id: string, data: TUpdateRecipeCategory) => Promise<RecipeCategory>;
 	delete: (id: string) => Promise<void>;
 }
 

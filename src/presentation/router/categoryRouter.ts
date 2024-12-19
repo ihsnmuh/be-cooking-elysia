@@ -25,7 +25,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		"/categories",
 		async ({ set, query }) => {
 			try {
-				const categories = await categoryServices.getAllByReceiptId(
+				const categories = await categoryServices.getAllByRecipeId(
 					query.receiptId,
 				);
 

@@ -10,38 +10,38 @@ import { NotFoundError } from "../../infrastructure/entity/error";
 
 @injectable()
 export class CategoryServices {
-	private categoryRepo: CategoryRepository;
+		private categoryRepo: CategoryRepository;
 
-	constructor(@inject(TYPES.categoryRepo) categoryRepo: CategoryRepository) {
-		this.categoryRepo = categoryRepo;
-	}
+		constructor(@inject(TYPES.categoryRepo) categoryRepo: CategoryRepository) {
+			this.categoryRepo = categoryRepo;
+		}
 
-	async getAll() {
-		const allCategories = await this.categoryRepo.getAll();
-		return allCategories;
-	}
+		async getAll() {
+			const allCategories = await this.categoryRepo.getAll();
+			return allCategories;
+		}
 
-	async getAllByReceiptId(receiptId: string) {
-		const category = await this.categoryRepo.getAllByReceiptId(receiptId);
-		return category;
-	}
+		async getAllByRecipeId(receiptId: string) {
+			const category = await this.categoryRepo.getAllByRecipeId(receiptId);
+			return category;
+		}
 
-	async getOne(categoryIdOrName: string) {
-		const category = await this.categoryRepo.getOne(categoryIdOrName);
-		return category;
-	}
+		async getOne(categoryIdOrName: string) {
+			const category = await this.categoryRepo.getOne(categoryIdOrName);
+			return category;
+		}
 
-	async create(data: TCreateCategory) {
-		const newCategory = await this.categoryRepo.create(data);
-		return newCategory;
-	}
+		async create(data: TCreateCategory) {
+			const newCategory = await this.categoryRepo.create(data);
+			return newCategory;
+		}
 
-	async update(categoryId: string, data: TUpdateCategory) {
-		const updatedCategory = await this.categoryRepo.update(categoryId, data);
-		return updatedCategory;
-	}
+		async update(categoryId: string, data: TUpdateCategory) {
+			const updatedCategory = await this.categoryRepo.update(categoryId, data);
+			return updatedCategory;
+		}
 
-	async delete(categoryId: string) {
-		await this.categoryRepo.delete(categoryId);
+		async delete(categoryId: string) {
+			await this.categoryRepo.delete(categoryId);
+		}
 	}
-}
