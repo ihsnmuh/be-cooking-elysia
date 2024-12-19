@@ -3,9 +3,10 @@ POST http://localhost:3000/api/v1/register
 Content-Type: application/json
 
 {
-    "name": "ihsan",
-    "email": "ihsan2@mail.com",
-    "username": "ihsan",
+    "name": "admin",
+    "email": "admin@mail.com",
+    "role": "ADMIN",
+    "username": "admin",
     "password": "qwerty123"
 }
 
