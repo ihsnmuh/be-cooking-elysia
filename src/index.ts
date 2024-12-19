@@ -1,8 +1,24 @@
 import { Elysia } from "elysia";
+import swagger from "@elysiajs/swagger";
 import { authRouter } from "./presentation/router/authRouter";
 import { categoryRouter } from "./presentation/router/categoryRouter";
 
 const app = new Elysia()
+
+	// swagger plugin handler
+	.use(
+		swagger({
+			path: "/docs",
+			// set config for setup swagger
+			// more info on https://github.com/scalar/scalar/blob/main/documentation/configuration.md
+			scalarConfig: {
+				defaultHttpClient: {
+					targetKey: "javascript",
+					clientKey: "fetch",
+				},
+			},
+		}),
+	)
 
 	// Group /api
 	.group("/api", (app) =>
