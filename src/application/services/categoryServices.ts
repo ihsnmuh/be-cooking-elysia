@@ -1,7 +1,12 @@
+import "reflect-metadata";
 import { inject, injectable } from "inversify";
 import type { CategoryRepository } from "../../infrastructure/db/categoryRepo";
 import { TYPES } from "../../infrastructure/entity/type";
-import type { TCreateCategory } from "../../infrastructure/entity/interface";
+import type {
+	TCreateCategory,
+	TUpdateCategory,
+} from "../../infrastructure/entity/interface";
+import { NotFoundError } from "../../infrastructure/entity/error";
 
 @injectable()
 export class CategoryServices {
@@ -21,8 +26,8 @@ export class CategoryServices {
 		return category;
 	}
 
-	async getOne(categoryId: string) {
-		const category = await this.categoryRepo.getOne(categoryId);
+	async getOne(categoryIdOrName: string) {
+		const category = await this.categoryRepo.getOne(categoryIdOrName);
 		return category;
 	}
 
@@ -31,7 +36,7 @@ export class CategoryServices {
 		return newCategory;
 	}
 
-	async update(categoryId: string, data: TCreateCategory) {
+	async update(categoryId: string, data: TUpdateCategory) {
 		const updatedCategory = await this.categoryRepo.update(categoryId, data);
 		return updatedCategory;
 	}

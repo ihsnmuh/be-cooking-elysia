@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { authRouter } from "./presentation/router/authRouter";
+import { categoryRouter } from "./presentation/router/categoryRouter";
 
 const app = new Elysia()
 
@@ -7,7 +8,8 @@ const app = new Elysia()
 	.group("/api", (app) =>
 		app
 			//* Routes
-			.use(authRouter),
+			.use(authRouter)
+			.use(categoryRouter),
 	)
 
 	.listen(3000);

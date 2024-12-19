@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { inject, injectable } from "inversify";
 import type { SessionRepository } from "../../infrastructure/db/sessionRepo";
 import type { UserRepository } from "../../infrastructure/db/userRepo";

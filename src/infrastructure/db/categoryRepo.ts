@@ -1,16 +1,19 @@
 import { Prisma, type PrismaClient } from "@prisma/client";
-import type { ICategory, TCreateCategory } from "../entity/interface";
+import type {
+	ICategory,
+	TCreateCategory,
+	TUpdateCategory,
+} from "../entity/interface";
 import { DBError } from "../entity/error";
 import "reflect-metadata";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../entity/type";
-import { t } from "elysia";
 
 @injectable()
 export class CategoryRepository implements ICategory {
 	private prisma: PrismaClient;
 
-	constructor(@inject(TYPES.categoryRepo) prisma: PrismaClient) {
+	constructor(@inject(TYPES.prisma) prisma: PrismaClient) {
 		this.prisma = prisma;
 	}
 
@@ -53,11 +56,18 @@ export class CategoryRepository implements ICategory {
 		}
 	}
 
-	async getOne(categoryId: string) {
+	async getOne(categoryIdOrName: string) {
 		try {
-			const category = await this.prisma.category.findUnique({
+			const category = await this.prisma.category.findFirst({
 				where: {
-					id: categoryId,
+					OR: [
+						{
+							name: categoryIdOrName,
+						},
+						{
+							id: categoryIdOrName,
+						},
+					],
 				},
 			});
 
@@ -95,7 +105,7 @@ export class CategoryRepository implements ICategory {
 		}
 	}
 
-	async update(categoryId: string, data: TCreateCategory) {
+	async update(categoryId: string, data: TUpdateCategory) {
 		try {
 			const updatedCategory = await this.prisma.category.update({
 				where: {
