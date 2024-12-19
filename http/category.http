@@ -12,6 +12,7 @@ GET http://localhost:3000/api/v1/categories/breakfast
 ### Create a category
 POST http://localhost:3000/api/v1/categories
 Content-Type: application/json
+Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 
 {
     "name": "Breakfast",
@@ -19,8 +20,9 @@ Content-Type: application/json
 }
 
 ### Update a category
-PATCH http://localhost:3000/api/v1/categories/8a04a2b3-ab6d-47e2-831d-b3cb54f57991
+PATCH http://localhost:3000/api/v1/categories/a2040076-31b3-4ffc-8c4c-316e89dff17d
 Content-Type: application/json
+Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 
 {
     "name": "Brunch",
@@ -29,3 +31,4 @@ Content-Type: application/json
 
 ### Delete a category
 DELETE http://localhost:3000/api/v1/categories/8a04a2b3-ab6d-47e2-831d-b3cb54f57991
+Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562

@@ -1,5 +1,6 @@
 import Elysia, { t } from "elysia";
-import { categoryServices } from "../../application/instance";
+import { authServices, categoryServices } from "../../application/instance";
+import { AuthorizationError } from "../../infrastructure/entity/error";
 
 export const categoryRouter = new Elysia({ prefix: "/v1" })
 
@@ -87,10 +88,25 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 			}
 		},
 		{
+			headers: t.Object({
+				authorization: t.String({ description: "Bearer token" }),
+			}),
+
 			body: t.Object({
 				name: t.String(),
 				imageUrl: t.String(),
 			}),
+
+			// * Middleware
+			beforeHandle: async ({ headers }) => {
+				const sessionId = headers.authorization?.split(" ")[1];
+
+				if (!sessionId) throw new AuthorizationError("Unauthorized");
+
+				const { user } = await authServices.decodeSession(sessionId);
+
+				if (user.role !== "ADMIN") throw new AuthorizationError("Unauthorized");
+			},
 		},
 	)
 
@@ -119,26 +135,60 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 			}
 		},
 		{
+			headers: t.Object({
+				authorization: t.String({ description: "Bearer token" }),
+			}),
+
 			body: t.Object({
 				name: t.Optional(t.String()),
 				imageUrl: t.Optional(t.String()),
 			}),
+
+			// * Middleware
+			beforeHandle: async ({ headers }) => {
+				const sessionId = headers.authorization?.split(" ")[1];
+
+				if (!sessionId) throw new AuthorizationError("Unauthorized");
+
+				const { user } = await authServices.decodeSession(sessionId);
+
+				if (user.role !== "ADMIN") throw new AuthorizationError("Unauthorized");
+			},
 		},
 	)
 
 	// * Delete category
-	.delete("/categories/:categoryId", async ({ params, set }) => {
-		try {
-			await categoryServices.delete(params.categoryId);
+	.delete(
+		"/categories/:categoryId",
+		async ({ params, set }) => {
+			try {
+				await categoryServices.delete(params.categoryId);
 
-			set.status = 204;
-		} catch (error) {
-			set.status = 500;
+				set.status = 204;
+			} catch (error) {
+				set.status = 500;
 
-			if (error instanceof Error) {
-				throw new Error(error.message);
+				if (error instanceof Error) {
+					throw new Error(error.message);
+				}
+
+				throw new Error("Something went wrong!");
 			}
+		},
+		{
+			headers: t.Object({
+				authorization: t.String({ description: "Bearer token" }),
+			}),
 
-			throw new Error("Something went wrong!");
-		}
-	});
+			// * Middleware
+			beforeHandle: async ({ headers }) => {
+				const sessionId = headers.authorization?.split(" ")[1];
+
+				if (!sessionId) throw new AuthorizationError("Unauthorized");
+
+				const { user } = await authServices.decodeSession(sessionId);
+
+				if (user.role !== "ADMIN") throw new AuthorizationError("Unauthorized");
+			},
+		},
+	);
