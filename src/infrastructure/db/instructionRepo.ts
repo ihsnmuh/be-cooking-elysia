@@ -83,7 +83,6 @@ export class InstructionRepository implements IInstruction {
 
 			return instruction;
 		} catch (error) {
-			console.log("🚀 ~ InstructionRepository ~ create ~ error:", error);
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error creating resource in DB");
 			}
