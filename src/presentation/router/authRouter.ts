@@ -29,6 +29,10 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 			}
 		},
 		{
+			detail: {
+				tags: ["Auth"],
+				description: "Register a new user.",
+			},
 			// schema guard
 			body: t.Object({
 				name: t.String({ minLength: 3 }),
@@ -63,6 +67,11 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 			}
 		},
 		{
+			detail: {
+				tags: ["Auth"],
+				description: "Login user.",
+			},
+
 			body: t.Object({
 				emailOrUsername: t.Union([
 					t.String({ format: "email" }),
@@ -100,6 +109,11 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 			}
 		},
 		{
+			detail: {
+				tags: ["Auth"],
+				description: "Logout user.",
+			},
+
 			body: t.Object({
 				sessionId: t.String(),
 			}),
@@ -132,6 +146,11 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 			}
 		},
 		{
+			detail: {
+				tags: ["Auth"],
+				description: "Check session validity.",
+			},
+
 			body: t.Object({
 				sessionId: t.String(),
 			}),

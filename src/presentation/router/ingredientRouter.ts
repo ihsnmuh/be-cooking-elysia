@@ -1,17 +1,17 @@
 import Elysia, { t } from "elysia";
-import { authServices, categoryServices } from "../../application/instance";
+import { authServices, ingredientService } from "../../application/instance";
 import { AuthorizationError } from "../../infrastructure/entity/error";
 
-export const categoryRouter = new Elysia({ prefix: "/v1" })
+export const ingredientRouter = new Elysia({ prefix: "/v1" })
 
-	// * Get all categories
+	// * Get all ingredients
 	.get(
-		"/categories",
+		"/ingredients",
 		async ({ set }) => {
 			try {
-				const allCategories = await categoryServices.getAll();
+				const allIngredients = await ingredientService.getAll();
 
-				return allCategories;
+				return allIngredients;
 			} catch (error) {
 				set.status = 500;
 
@@ -24,22 +24,22 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			detail: {
-				tags: ["Categories"],
-				description: "Fetch all categories.",
+				tags: ["Ingredients"],
+				description: "Fetch all ingredients.",
 			},
 		},
 	)
 
-	// * Get all categories by recipe id
+	// * Get all ingredients by recipe id
 	.get(
-		"/categories/recipe",
+		"/ingredients/recipe",
 		async ({ set, query }) => {
 			try {
-				const categories = await categoryServices.getAllByRecipeId(
+				const ingredients = await ingredientService.getAllByRecipeId(
 					query.recipeId,
 				);
 
-				return categories;
+				return ingredients;
 			} catch (error) {
 				set.status = 500;
 
@@ -52,8 +52,8 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			detail: {
-				tags: ["Categories"],
-				description: "Fetch all categories for a given recipe ID.",
+				tags: ["Ingredients"],
+				description: "Fetch all ingredients for a given recipe ID.",
 			},
 
 			query: t.Object({
@@ -62,14 +62,16 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 	)
 
-	// * Get one category
+	// * Get one ingredient
 	.get(
-		"/categories/:categoryIdOrName",
+		"/ingredients/:ingredientIdOrName",
 		async ({ params, set }) => {
 			try {
-				const category = await categoryServices.getOne(params.categoryIdOrName);
+				const ingredient = await ingredientService.getOne(
+					params.ingredientIdOrName,
+				);
 
-				return category;
+				return ingredient;
 			} catch (error) {
 				set.status = 500;
 
@@ -82,24 +84,23 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			detail: {
-				tags: ["Categories"],
-				description: "Fetch one category by ID or name.",
+				tags: ["Ingredients"],
+				description: "Fetch a single ingredient by its ID or name.",
 			},
 		},
 	)
 
-	// * Create category
+	// * Create new ingredient
 	.post(
-		"/categories",
+		"/ingredients",
 		async ({ body, set }) => {
 			try {
-				const newCategory = await categoryServices.create({
+				const newIngredient = await ingredientService.create({
 					name: body.name.toLocaleLowerCase(),
 					imageUrl: body.imageUrl ?? "",
 				});
 
-				set.status = 201;
-				return newCategory;
+				return newIngredient;
 			} catch (error) {
 				set.status = 500;
 
@@ -112,8 +113,8 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			detail: {
-				tags: ["Categories"],
-				description: "Create a new category (Admin only).",
+				tags: ["Ingredients"],
+				description: "Create a new ingredient (Admin only).",
 			},
 
 			headers: t.Object({
@@ -138,20 +139,20 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 	)
 
-	// * Update category
+	// * Update ingredient
 	.patch(
-		"/categories/:categoryId",
-		async ({ body, params, set }) => {
+		"/ingredients/:ingredientId",
+		async ({ params, body, set }) => {
 			try {
-				const updatedCategory = await categoryServices.update(
-					params.categoryId,
+				const updatedIngredient = await ingredientService.update(
+					params.ingredientId,
 					{
 						name: body.name?.toLocaleLowerCase(),
 						imageUrl: body.imageUrl ?? "",
 					},
 				);
 
-				return updatedCategory;
+				return updatedIngredient;
 			} catch (error) {
 				set.status = 500;
 
@@ -164,8 +165,8 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			detail: {
-				tags: ["Categories"],
-				description: "Update a category (Admin only).",
+				tags: ["Ingredients"],
+				description: "Update an ingredient by ID (Admin only).",
 			},
 
 			headers: t.Object({
@@ -173,8 +174,8 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 			}),
 
 			body: t.Object({
-				name: t.Optional(t.String()),
-				imageUrl: t.Optional(t.String()),
+				name: t.String(),
+				imageUrl: t.String(),
 			}),
 
 			// * Middleware
@@ -190,14 +191,14 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 	)
 
-	// * Delete category
+	// * Delete ingredient
 	.delete(
-		"/categories/:categoryId",
+		"/ingredients/:ingredientId",
 		async ({ params, set }) => {
 			try {
-				await categoryServices.delete(params.categoryId);
+				await ingredientService.delete(params.ingredientId);
 
-				set.status = 204;
+				return { message: "Ingredient deleted" };
 			} catch (error) {
 				set.status = 500;
 
@@ -210,8 +211,8 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		},
 		{
 			detail: {
-				tags: ["Categories"],
-				description: "Delete a category by ID (Admin only).",
+				tags: ["Ingredients"],
+				description: "Delete an ingredient by ID (Admin only).",
 			},
 
 			headers: t.Object({
