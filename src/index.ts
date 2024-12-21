@@ -3,6 +3,7 @@ import swagger from "@elysiajs/swagger";
 import { authRouter } from "./presentation/router/authRouter";
 import { categoryRouter } from "./presentation/router/categoryRouter";
 import { ingredientRouter } from "./presentation/router/ingredientRouter";
+import { InstructionRouter } from "./presentation/router/instructionRouter";
 
 const app = new Elysia()
 
@@ -27,7 +28,8 @@ const app = new Elysia()
 			//* Routes
 			.use(authRouter)
 			.use(categoryRouter)
-			.use(ingredientRouter),
+			.use(ingredientRouter)
+			.use(InstructionRouter),
 	)
 
 	.listen(3000);

@@ -5,11 +5,14 @@ import type {
 	TUpdateInstruction,
 } from "../entity/interface";
 import { DBError } from "../entity/error";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../entity/type";
 
+@injectable()
 export class InstructionRepository implements IInstruction {
 	private prisma: PrismaClient;
 
-	constructor(prisma: PrismaClient) {
+	constructor(@inject(TYPES.prisma) prisma: PrismaClient) {
 		this.prisma = prisma;
 	}
 
@@ -80,6 +83,7 @@ export class InstructionRepository implements IInstruction {
 
 			return instruction;
 		} catch (error) {
+			console.log("🚀 ~ InstructionRepository ~ create ~ error:", error);
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error creating resource in DB");
 			}

@@ -1,0 +1,35 @@
+## Instruction
+
+### Get all instructions
+GET http://localhost:3000/api/v1/instructions
+
+### Get all instructions by recipeId
+GET http://localhost:3000/api/v1/instructions/recipe?recipeId=asdf
+
+### Get instruction by id
+GET http://localhost:3000/api/v1/instructions/6d33560a-093b-4713-8dfc-049ba978d4d1
+
+### Create an instruction
+POST http://localhost:3000/api/v1/instructions
+Content-Type: application/json
+Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+
+{
+    "recipeId": "asdf",
+    "stepNumber": 1,
+    "text": "Preheat oven to 350 degrees"
+}
+
+### Update an instruction
+PATCH http://localhost:3000/api/v1/instructions/6d33560a-093b-4713-8dfc-049ba978d4d1
+Content-Type: application/json
+Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+
+{
+    "stepNumber": 1,
+    "text": "Preheat oven to 375 degrees"
+}
+
+### Delete an instruction
+DELETE http://localhost:3000/api/v1/instructions/6d33560a-093b-4713-8dfc-049ba978d4d1
+Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
