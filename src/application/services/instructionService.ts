@@ -11,7 +11,7 @@ export class InstructionService {
 	private instructionRepo: InstructionRepository;
 
 	constructor(
-		@inject(TYPES.InstructionRepo) instructionRepo: InstructionRepository,
+		@inject(TYPES.instructionRepo) instructionRepo: InstructionRepository,
 	) {
 		this.instructionRepo = instructionRepo;
 	}
