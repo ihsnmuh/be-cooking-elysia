@@ -77,7 +77,9 @@ export class InstructionRepository implements IInstruction {
 		try {
 			const instruction = await this.prisma.instruction.create({
 				data: {
-					...data,
+					stepNumber: data.stepNumber,
+					recipeId: data.recipeId,
+					text: data.text,
 				},
 			});
 
@@ -97,7 +99,11 @@ export class InstructionRepository implements IInstruction {
 				where: {
 					id: instructionId,
 				},
-				data,
+				data: {
+					stepNumber: data.stepNumber,
+					recipeId: data.recipeId,
+					text: data.text,
+				},
 			});
 
 			return instruction;

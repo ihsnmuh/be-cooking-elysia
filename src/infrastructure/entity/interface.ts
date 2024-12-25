@@ -14,7 +14,22 @@ export type TCreateUser = Omit<User, "id" | "createdAt" | "updatedAt">;
 export type TUpdateUser = Partial<User>;
 
 export type TCreateRecipe = Omit<Recipe, "id" | "createdAt" | "updatedAt">;
-export type TUpdateRecipe = Omit<Recipe, "id">;
+export type TCreateRecipeMerge = TCreateRecipe & {
+	categories: Pick<RecipeCategory, "id">[];
+} & {
+	ingredients: Omit<RecipeIngredient, "id" | "createdAt" | "updatedAt">[];
+} & {
+	instructions: Omit<Instruction, "id" | "createdAt" | "updatedAt">[];
+};
+export type TUpdateRecipe = Partial<Recipe>;
+
+export type TUpdateRecipeMerge = TUpdateRecipe & {
+	categories: Partial<RecipeCategory>[];
+} & {
+	ingredients: Partial<RecipeIngredient>[];
+} & {
+	instructions: Partial<Instruction>[];
+};
 
 export type TCreateIngredient = Omit<
 	Ingredient,
@@ -65,12 +80,12 @@ export interface ISession {
 //* IRecipe
 export interface IRecipe {
 	getAll: () => Promise<Recipe[]>;
-	getAllbyUser: (userId: string) => Promise<Recipe[]>;
+	getAllByUserId: (userId: string) => Promise<Recipe[]>;
+	getAllByCategoryId: (categoryId: string) => Promise<Recipe[]>;
+	getAllByIngredientId: (ingredientId: string) => Promise<Recipe[]>;
 	getOne: (id: string) => Promise<Recipe>;
-	getOnebyUser: (id: string, userId: string) => Promise<Recipe>;
-	getIngredients: (recipeId: string) => Promise<Ingredient[]>;
-	create: (data: TCreateRecipe) => Promise<Recipe>;
-	update: (id: string, data: TUpdateRecipe) => Promise<Recipe>;
+	create: (data: TCreateRecipeMerge) => Promise<Recipe>;
+	update: (id: string, data: TUpdateRecipeMerge) => Promise<Recipe>;
 	delete: (id: string) => Promise<void>;
 }
 
