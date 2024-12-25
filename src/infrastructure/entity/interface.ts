@@ -17,9 +17,15 @@ export type TCreateRecipe = Omit<Recipe, "id" | "createdAt" | "updatedAt">;
 export type TCreateRecipeMerge = TCreateRecipe & {
 	categories: Pick<RecipeCategory, "id">[];
 } & {
-	ingredients: Omit<RecipeIngredient, "id" | "createdAt" | "updatedAt">[];
+	ingredients: Omit<
+		RecipeIngredient,
+		"id" | "createdAt" | "updatedAt" | "recipeId"
+	>[];
 } & {
-	instructions: Omit<Instruction, "id" | "createdAt" | "updatedAt">[];
+	instructions: Omit<
+		Instruction,
+		"id" | "createdAt" | "updatedAt" | "recipeId"
+	>[];
 };
 export type TUpdateRecipe = Partial<Recipe>;
 
