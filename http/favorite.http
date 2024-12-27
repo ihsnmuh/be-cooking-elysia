@@ -10,7 +10,7 @@ Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
 Content-Type: application/json
 
 {
-    "recipeId": "1fb978ef-7587-4c29-99c1-375b6d1f0ac3"
+    "recipeId": "93c2186c-6c47-44bc-bd98-6ea2c6f66ec7"
 }
 
 ### Delete favorite

@@ -18,6 +18,18 @@ export class FavoriteService {
 	}
 
 	async create(data: TCreateFavorite) {
+		// check recipe on list favorite
+
+		const listFavorite = await this.favoriteRepo.getAllByUserId(data.userId);
+
+		const checkSameFavorite =
+			listFavorite.filter((favorite) => favorite.recipeId === data.recipeId)
+				.length > 0;
+
+		if (checkSameFavorite) {
+			throw new Error("Recipe Already on Favorite List");
+		}
+
 		const newFavorite = await this.favoriteRepo.create(data);
 		return newFavorite;
 	}
