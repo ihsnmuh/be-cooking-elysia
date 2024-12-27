@@ -6,7 +6,6 @@ import type {
 	TCreateCategory,
 	TUpdateCategory,
 } from "../../infrastructure/entity/interface";
-import { NotFoundError } from "../../infrastructure/entity/error";
 
 @injectable()
 export class CategoryServices {

@@ -1,8 +1,9 @@
-import { Favorite, Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@prisma/client";
 import type { IFavorite, TCreateFavorite } from "../entity/interface";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../entity/type";
 import { DBError } from "../entity/error";
+import "reflect-metadata";
 
 @injectable()
 export class FavoriteRepository implements IFavorite {
@@ -12,7 +13,7 @@ export class FavoriteRepository implements IFavorite {
 		this.prisma = prisma;
 	}
 
-	async getByUserId(userId: string) {
+	async getAllByUserId(userId: string) {
 		try {
 			const favorites = await this.prisma.favorite.findMany({
 				where: {

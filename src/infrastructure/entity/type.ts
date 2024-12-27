@@ -5,6 +5,7 @@ export const TYPES = {
 	sessionRepo: Symbol.for("SessionRepository"),
 	ingredientRepo: Symbol.for("IngredientRepository"),
 	instructionRepo: Symbol.for("InstructionRepository"),
+	favoriteRepo: Symbol.for("FavoriteRepository"),
 	prisma: Symbol.for("PrismaClient"),
 	logger: Symbol.for("Logger"),
 };
