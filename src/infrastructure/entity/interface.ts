@@ -92,7 +92,7 @@ export interface IRecipe {
 	getOne: (id: string) => Promise<Recipe>;
 	create: (data: TCreateRecipeMerge) => Promise<Recipe>;
 	update: (id: string, data: TUpdateRecipeMerge) => Promise<Recipe>;
-	delete: (id: string) => Promise<void>;
+	delete: (id: string, userId: string) => Promise<void>;
 }
 
 //* IIngredient

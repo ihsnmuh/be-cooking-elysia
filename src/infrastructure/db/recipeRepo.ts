@@ -18,7 +18,42 @@ export class RecipeRepository implements IRecipe {
 
 	async getAll() {
 		try {
-			const recipes = await this.prisma.recipe.findMany();
+			const recipes = await this.prisma.recipe.findMany({
+				include: {
+					categories: {
+						select: {
+							id: true,
+							category: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+					ingredients: {
+						select: {
+							id: true,
+							quantity: true,
+							unit: true,
+							ingredient: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+					user: {
+						select: {
+							id: true,
+							name: true,
+							username: true,
+							avatar: true,
+						},
+					},
+				},
+			});
 			return recipes;
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -34,6 +69,40 @@ export class RecipeRepository implements IRecipe {
 			const recipes = await this.prisma.recipe.findMany({
 				where: {
 					userId: userId,
+				},
+				include: {
+					categories: {
+						select: {
+							id: true,
+							category: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+					ingredients: {
+						select: {
+							id: true,
+							quantity: true,
+							unit: true,
+							ingredient: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+					user: {
+						select: {
+							id: true,
+							name: true,
+							username: true,
+							avatar: true,
+						},
+					},
 				},
 			});
 
@@ -57,17 +126,43 @@ export class RecipeRepository implements IRecipe {
 				where: {
 					categories: {
 						some: {
-							id: categoryId,
+							categoryId: categoryId,
 						},
 					},
 				},
 				include: {
 					categories: {
-						include: {
-							category: true,
+						select: {
+							id: true,
+							category: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
 						},
 					},
-					user: true,
+					ingredients: {
+						select: {
+							id: true,
+							quantity: true,
+							unit: true,
+							ingredient: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+					user: {
+						select: {
+							id: true,
+							name: true,
+							username: true,
+							avatar: true,
+						},
+					},
 				},
 			});
 
@@ -91,17 +186,43 @@ export class RecipeRepository implements IRecipe {
 				where: {
 					ingredients: {
 						some: {
-							id: ingredientId,
+							ingredientId: ingredientId,
 						},
 					},
 				},
 				include: {
 					categories: {
-						include: {
-							category: true,
+						select: {
+							id: true,
+							category: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
 						},
 					},
-					user: true,
+					ingredients: {
+						select: {
+							id: true,
+							quantity: true,
+							unit: true,
+							ingredient: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
+						},
+					},
+					user: {
+						select: {
+							id: true,
+							name: true,
+							username: true,
+							avatar: true,
+						},
+					},
 				},
 			});
 
@@ -127,17 +248,44 @@ export class RecipeRepository implements IRecipe {
 				},
 				include: {
 					categories: {
-						include: {
-							category: true,
+						select: {
+							id: true,
+							category: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
 						},
 					},
 					ingredients: {
-						include: {
-							ingredient: true,
+						select: {
+							id: true,
+							quantity: true,
+							unit: true,
+							ingredient: {
+								select: {
+									id: true,
+									name: true,
+								},
+							},
 						},
 					},
-					instructions: true,
-					user: true,
+					instructions: {
+						select: {
+							id: true,
+							stepNumber: true,
+							text: true,
+						},
+					},
+					user: {
+						select: {
+							id: true,
+							name: true,
+							username: true,
+							avatar: true,
+						},
+					},
 				},
 			});
 
@@ -147,6 +295,7 @@ export class RecipeRepository implements IRecipe {
 
 			return recipe;
 		} catch (error) {
+			console.log("🚀 ~ RecipeRepository ~ getOne ~ error:", error);
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
 			}
@@ -228,6 +377,7 @@ export class RecipeRepository implements IRecipe {
 					description: data.description,
 					imageUrl: data.imageUrl,
 					servings: data.servings,
+					userId: data.userId,
 					cookingTime: data.cookingTime,
 					categories: {
 						update: data.categories.map((category) => ({
@@ -296,7 +446,7 @@ export class RecipeRepository implements IRecipe {
 		}
 	}
 
-	async delete(recipeId: string) {
+	async delete(recipeId: string, userId: string) {
 		try {
 			await this.prisma.recipe.delete({
 				where: {
@@ -304,6 +454,7 @@ export class RecipeRepository implements IRecipe {
 				},
 			});
 		} catch (error) {
+			console.log("🚀 ~ RecipeRepository ~ delete ~ error:", error);
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
 			}

@@ -1,0 +1,87 @@
+## Recipe
+
+### Get all recipes
+GET http://localhost:3000/api/v1/recipes
+
+### Get all recipes by UserId
+GET http://localhost:3000/api/v1/recipes/user?userId=65ec35c0-121f-4313-b55f-406143e5d955
+
+### Get all recipes by CategoryId
+GET http://localhost:3000/api/v1/recipes/category?categoryId=317e79e1-eb88-4e8e-8900-b4926b0b071a
+
+### Get all recipes by IngredientId
+GET http://localhost:3000/api/v1/recipes/ingredient?ingredientId=6d33560a-093b-4713-8dfc-049ba978d4d1
+
+### Get one recipe
+GET http://localhost:3000/api/v1/recipes/535fe1b1-82d5-495d-96df-9697687507ce
+
+### Create recipe
+POST http://localhost:3000/api/v1/recipes
+Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
+Content-Type: application/json
+
+{
+    "title": "Pisang Goreng",
+    "description": "ini adalah pisang goreng",
+    "userId": "65ec35c0-121f-4313-b55f-406143e5d955",
+    "imageUrl": "",
+    "servings": 1,
+    "cookingTime": 30,
+    "categories": [
+        {
+            "id": "317e79e1-eb88-4e8e-8900-b4926b0b071a"
+        }
+    ],
+    "ingredients": [
+        {
+            "quantity": 2,
+            "unit": "sendok",
+            "ingredientId": "6d33560a-093b-4713-8dfc-049ba978d4d1"
+        }
+    ],
+    "instructions": [
+        {
+            "text": "poting pisang kecil-kecil",
+            "stepNumber": 1
+        }
+    ]
+}
+
+### Update recipe
+PATCH http://localhost:3000/api/v1/recipes/535fe1b1-82d5-495d-96df-9697687507ce
+Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
+Content-Type: application/json
+
+{
+    "title": "Pisang Goreng Update lagi",
+    "description": "ini adalah pisang goreng Update",
+    "userId": "65ec35c0-121f-4313-b55f-406143e5d955",
+    "imageUrl": "",
+    "servings": 1,
+    "cookingTime": 30,
+    "categories": [
+        {
+            "id": "12fc1867-64ae-492b-bd08-2b1afcfe5eda",
+            "categoryId": "a2040076-31b3-4ffc-8c4c-316e89dff17d"
+        }
+    ],
+    "ingredients": [
+        {
+            "id": "4b10c9a2-dffd-4a56-968a-884bf0a0b068",
+            "quantity": 1,
+            "unit": "liter",
+            "ingredientId": "6d33560a-093b-4713-8dfc-049ba978d4d1"
+        }
+    ],
+    "instructions": [
+        {
+            "id": "f06ccdd1-0691-4e0e-a2af-caaa2247dcf5",
+            "text": "potong pisang kecil-kecil update",
+            "stepNumber": 1
+        }
+    ]
+}
+
+### Delete recipe
+DELETE http://localhost:3000/api/v1/recipes/55462f83-81df-4ce2-b44b-ab24669893f4
+Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e

@@ -2,7 +2,7 @@ import Elysia, { t } from "elysia";
 import { authServices, instructionService } from "../../application/instance";
 import { AuthorizationError } from "../../infrastructure/entity/error";
 
-export const InstructionRouter = new Elysia({ prefix: "/v1" })
+export const instructionRouter = new Elysia({ prefix: "/v1" })
 
 	// * Get all instructions
 	.get(

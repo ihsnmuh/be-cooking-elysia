@@ -48,7 +48,7 @@ export class RecipeServices {
 		return updatedRecipe;
 	}
 
-	async delete(recipeId: string) {
-		await this.recipeRepo.delete(recipeId);
+	async delete(recipeId: string, userId: string) {
+		await this.recipeRepo.delete(recipeId, userId);
 	}
 }
