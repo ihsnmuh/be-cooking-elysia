@@ -83,5 +83,5 @@ Content-Type: application/json
 }
 
 ### Delete recipe
-DELETE http://localhost:3000/api/v1/recipes/55462f83-81df-4ce2-b44b-ab24669893f4
+DELETE http://localhost:3000/api/v1/recipes/535fe1b1-82d5-495d-96df-9697687507ce
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
