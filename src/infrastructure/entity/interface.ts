@@ -154,5 +154,5 @@ export interface IRecipeCategory {
 export interface IFavorite {
 	getAllByUserId: (userId: string) => Promise<Favorite[]>;
 	create: (data: TCreateFavorite) => Promise<Favorite>;
-	delete: (id: string) => Promise<void>;
+	delete: (id: string, userId: string) => Promise<void>;
 }

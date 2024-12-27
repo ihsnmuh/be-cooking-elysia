@@ -5,6 +5,7 @@ import { categoryRouter } from "./presentation/router/categoryRouter";
 import { ingredientRouter } from "./presentation/router/ingredientRouter";
 import { instructionRouter } from "./presentation/router/instructionRouter";
 import { recipeRouter } from "./presentation/router/recipeRouter";
+import { favoriteRouter } from "./presentation/router/favoriteRouter";
 
 const app = new Elysia()
 
@@ -31,7 +32,8 @@ const app = new Elysia()
 			.use(categoryRouter)
 			.use(ingredientRouter)
 			.use(instructionRouter)
-			.use(recipeRouter),
+			.use(recipeRouter)
+			.use(favoriteRouter),
 	)
 
 	.listen(3000);

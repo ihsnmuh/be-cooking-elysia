@@ -22,7 +22,7 @@ export class FavoriteService {
 		return newFavorite;
 	}
 
-	async delete(favoriteId: string) {
-		await this.favoriteRepo.delete(favoriteId);
+	async delete(favoriteId: string, userId: string) {
+		await this.favoriteRepo.delete(favoriteId, userId);
 	}
 }

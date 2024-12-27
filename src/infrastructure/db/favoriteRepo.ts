@@ -19,6 +19,25 @@ export class FavoriteRepository implements IFavorite {
 				where: {
 					userId: userId,
 				},
+				include: {
+					recipe: {
+						select: {
+							id: true,
+							title: true,
+							description: true,
+							cookingTime: true,
+							imageUrl: true,
+							servings: true,
+						},
+					},
+					user: {
+						select: {
+							id: true,
+							name: true,
+							username: true,
+						},
+					},
+				},
 			});
 
 			return favorites;
@@ -51,11 +70,12 @@ export class FavoriteRepository implements IFavorite {
 		}
 	}
 
-	async delete(favoriteId: string) {
+	async delete(favoriteId: string, userId: string) {
 		try {
 			await this.prisma.favorite.delete({
 				where: {
 					id: favoriteId,
+					userId: userId,
 				},
 			});
 		} catch (error) {
