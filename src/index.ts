@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import swagger from "@elysiajs/swagger";
+import cors from "@elysiajs/cors";
 import { authRouter } from "./presentation/router/authRouter";
 import { categoryRouter } from "./presentation/router/categoryRouter";
 import { ingredientRouter } from "./presentation/router/ingredientRouter";
@@ -8,6 +9,8 @@ import { recipeRouter } from "./presentation/router/recipeRouter";
 import { favoriteRouter } from "./presentation/router/favoriteRouter";
 
 const app = new Elysia()
+
+	.use(cors())
 
 	// swagger plugin handler
 	.use(
@@ -36,7 +39,7 @@ const app = new Elysia()
 			.use(favoriteRouter),
 	)
 
-	.listen(3000);
+	.listen(3001);
 
 console.log(
 	`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
