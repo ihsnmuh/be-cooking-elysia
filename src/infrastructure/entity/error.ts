@@ -9,24 +9,29 @@ export class DBError extends Error {
 	}
 }
 
-export class AuthorizationError extends Error {
+export class ApplicationError extends Error {
 	public status: number;
-	public code: "AUTHORIZATION_ERROR";
+	public code: string;
 
-	constructor(message: string) {
+	constructor(message: string, status: number, code: string) {
 		super(message);
-		this.status = 401;
-		this.code = "AUTHORIZATION_ERROR";
+		this.status = status;
+		this.code = code;
+
+		if (Error.captureStackTrace) {
+			Error.captureStackTrace(this, this.constructor);
+		}
 	}
 }
 
-export class NotFoundError extends Error {
-	public status: number;
-	public code: "NOTFOUND_ERROR";
-
+export class AuthorizationError extends ApplicationError {
 	constructor(message: string) {
-		super(message);
-		this.status = 404;
-		this.code = "NOTFOUND_ERROR";
+		super(message, 401, "AUTHORIZATION_ERROR");
+	}
+}
+
+export class NotFoundError extends ApplicationError {
+	constructor(message: string) {
+		super(message, 404, "NOTFOUND_ERROR");
 	}
 }

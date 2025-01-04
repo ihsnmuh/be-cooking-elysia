@@ -1,6 +1,7 @@
 import Elysia, { t } from "elysia";
 import { authServices } from "../../application/instance";
 import { generalDTO } from "../../application/dtos/generalDTO";
+import { ApplicationError } from "../../infrastructure/entity/error";
 
 export const authRouter = new Elysia({ prefix: "/v1" })
 
@@ -25,8 +26,17 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 					newUser,
 				).dataResult();
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
+				}
 
+				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
 
@@ -69,8 +79,17 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 					sessionId: session.id,
 				}).dataResult();
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
+				}
 
+				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
 
@@ -114,8 +133,17 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 
 				await authServices.logoutUser(sessionId);
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
+				}
 
+				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
 
@@ -160,8 +188,17 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 					status: "valid",
 				}).dataResult();
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
+				}
 
+				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
 
