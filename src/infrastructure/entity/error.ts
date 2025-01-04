@@ -1,14 +1,3 @@
-export class DBError extends Error {
-	public status: number;
-	public code: "DB_ERROR";
-
-	constructor(message: string) {
-		super(message);
-		this.status = 500;
-		this.code = "DB_ERROR";
-	}
-}
-
 export class ApplicationError extends Error {
 	public status: number;
 	public code: string;
@@ -33,5 +22,11 @@ export class AuthorizationError extends ApplicationError {
 export class NotFoundError extends ApplicationError {
 	constructor(message: string) {
 		super(message, 404, "NOTFOUND_ERROR");
+	}
+}
+
+export class DBError extends ApplicationError {
+	constructor(message: string) {
+		super(message, 500, "DB_ERROR");
 	}
 }
