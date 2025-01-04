@@ -36,3 +36,9 @@ export class ValidationError extends ApplicationError {
 		super(message, 400, "VALIDATION_ERROR");
 	}
 }
+
+export class UploadError extends ApplicationError {
+	constructor(message: string) {
+		super(message, 409, "UPLOAD_ERROR");
+	}
+}

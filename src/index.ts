@@ -1,12 +1,14 @@
-import { Elysia } from "elysia";
-import swagger from "@elysiajs/swagger";
 import cors from "@elysiajs/cors";
+import staticPlugin from "@elysiajs/static";
+import swagger from "@elysiajs/swagger";
+import { Elysia } from "elysia";
 import { authRouter } from "./presentation/router/authRouter";
 import { categoryRouter } from "./presentation/router/categoryRouter";
+import { favoriteRouter } from "./presentation/router/favoriteRouter";
 import { ingredientRouter } from "./presentation/router/ingredientRouter";
 import { instructionRouter } from "./presentation/router/instructionRouter";
 import { recipeRouter } from "./presentation/router/recipeRouter";
-import { favoriteRouter } from "./presentation/router/favoriteRouter";
+import { uploadRouter } from "./presentation/router/uploadRouter";
 
 const app = new Elysia()
 
@@ -36,8 +38,12 @@ const app = new Elysia()
 			.use(ingredientRouter)
 			.use(instructionRouter)
 			.use(recipeRouter)
-			.use(favoriteRouter),
+			.use(favoriteRouter)
+			.use(uploadRouter),
 	)
+
+	// Serve the "public" directory as static files
+	.use(staticPlugin())
 
 	.listen(3001);
 

@@ -10,8 +10,10 @@
 	},
 	"dependencies": {
 		"@elysiajs/cors": "^1.2.0",
+		"@elysiajs/static": "^1.2.0",
 		"@elysiajs/swagger": "^1.1.6",
 		"@prisma/client": "^6.0.1",
+		"cloudinary": "^2.5.1",
 		"elysia": "latest",
 		"inversify": "^6.2.0",
 		"prisma": "^6.0.1",
