@@ -1,5 +1,6 @@
 import Elysia, { t } from "elysia";
 import { authServices } from "../../application/instance";
+import { generalDTO } from "../../application/dtos/generalDTO";
 
 export const authRouter = new Elysia({ prefix: "/v1" })
 
@@ -17,15 +18,24 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 				);
 
 				set.status = 201;
-				return newUser;
+				return new generalDTO(
+					"success",
+					"User registered successfully",
+					set.status,
+					newUser,
+				).dataResult();
 			} catch (error) {
 				set.status = 500;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
-				}
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
 
-				throw new Error("Something went wrong!");
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -55,15 +65,21 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 				);
 
 				set.status = 200;
-				return { sessionId: session.id };
+				return new generalDTO("success", "Login successful", set.status, {
+					sessionId: session.id,
+				}).dataResult();
 			} catch (error) {
 				set.status = 500;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
-				}
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
 
-				throw new Error("Something went wrong!");
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -86,7 +102,6 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 	.post(
 		"/logout",
 		async ({ body, set }) => {
-			console.log("🚀 ~ body:", body);
 			try {
 				const sessionId = body.sessionId;
 
@@ -101,11 +116,15 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 			} catch (error) {
 				set.status = 500;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
-				}
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
 
-				throw new Error("Something went wrong!");
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -131,18 +150,27 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 
 				if (isValid !== "valid") {
 					set.status = 401;
-					return { status: "invalid" };
+					return new generalDTO("error", "Session is invalid", set.status, {
+						status: "invalid",
+					}).dataResult();
 				}
 
-				return { status: "valid" };
+				set.status = 200;
+				return new generalDTO("success", "Login successful", set.status, {
+					status: "valid",
+				}).dataResult();
 			} catch (error) {
 				set.status = 500;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
-				}
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
 
-				throw new Error("Something went wrong!");
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
