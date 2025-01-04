@@ -5,6 +5,7 @@ import type { UserRepository } from "../../infrastructure/db/userRepo";
 import {
 	AuthorizationError,
 	NotFoundError,
+	ValidationError,
 } from "../../infrastructure/entity/error";
 import { TYPES } from "../../infrastructure/entity/type";
 import { userDTO } from "../dtos/userDTO";
@@ -35,7 +36,7 @@ export class AuthServices {
 
 		if (user) {
 			// User Available
-			throw new Error("User Already Register");
+			throw new ValidationError("User Already Register");
 		}
 
 		// hash password user
@@ -92,13 +93,13 @@ export class AuthServices {
 		const session = await this.sessionRepo.getOne(sessionId);
 
 		if (!session) {
-			throw new Error("Session Invalid");
+			throw new AuthorizationError("Session Invalid");
 		}
 
 		const user = await this.userRepo.getOne(session.userId);
 
 		if (!user) {
-			throw new Error("Session Invalid");
+			throw new AuthorizationError("Session Invalid");
 		}
 
 		return { user };

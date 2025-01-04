@@ -30,3 +30,9 @@ export class DBError extends ApplicationError {
 		super(message, 500, "DB_ERROR");
 	}
 }
+
+export class ValidationError extends ApplicationError {
+	constructor(message: string) {
+		super(message, 400, "VALIDATION_ERROR");
+	}
+}
