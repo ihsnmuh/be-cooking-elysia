@@ -1,17 +1,21 @@
 ## Category
 
 ### Get all categories
-GET http://localhost:3000/api/v1/categories
+GET http://localhost:3001/api/v1/categories
+Api-Key: selalu-bersyukur
 
 ### Get all categories by recipeId
-GET http://localhost:3000/api/v1/categories/recipe?recipeId=asdf
+GET http://localhost:3001/api/v1/categories/recipe?recipeId=asdf
+Api-Key: selalu-bersyukur
 
 ### Get category by id or name
-GET http://localhost:3000/api/v1/categories/breakfast
+GET http://localhost:3001/api/v1/categories/breakfast
+Api-Key: selalu-bersyukur
 
 ### Create a category
-POST http://localhost:3000/api/v1/categories
+POST http://localhost:3001/api/v1/categories
 Content-Type: application/json
+Api-Key: selalu-bersyukur
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 
 {
@@ -20,8 +24,9 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 }
 
 ### Update a category
-PATCH http://localhost:3000/api/v1/categories/a2040076-31b3-4ffc-8c4c-316e89dff17d
+PATCH http://localhost:3001/api/v1/categories/a2040076-31b3-4ffc-8c4c-316e89dff17d
 Content-Type: application/json
+Api-Key: selalu-bersyukur
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 
 {
@@ -30,5 +35,6 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 }
 
 ### Delete a category
-DELETE http://localhost:3000/api/v1/categories/8a04a2b3-ab6d-47e2-831d-b3cb54f57991
+DELETE http://localhost:3001/api/v1/categories/8a04a2b3-ab6d-47e2-831d-b3cb54f57991
+Api-Key: selalu-bersyukur
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562

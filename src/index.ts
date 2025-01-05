@@ -2,6 +2,7 @@ import cors from "@elysiajs/cors";
 import staticPlugin from "@elysiajs/static";
 import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
+import { AuthorizationError } from "./infrastructure/entity/error";
 import { authRouter } from "./presentation/router/authRouter";
 import { categoryRouter } from "./presentation/router/categoryRouter";
 import { favoriteRouter } from "./presentation/router/favoriteRouter";
@@ -13,6 +14,14 @@ import { uploadRouter } from "./presentation/router/uploadRouter";
 const app = new Elysia()
 
 	.use(cors())
+	.onBeforeHandle(({ headers, set }) => {
+		const apiKey = headers["api-key"];
+
+		if (apiKey !== process.env.API_KEY) {
+			set.status = 401;
+			return new AuthorizationError("You are not allowed!");
+		}
+	})
 
 	// swagger plugin handler
 	.use(
