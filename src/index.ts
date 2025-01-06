@@ -51,7 +51,6 @@ const app = new Elysia()
 				{
 					headers: t.Object({
 						"api-key": t.String(),
-						authorization: t.Optional(t.TemplateLiteral("Bearer ${string}")),
 					}),
 					beforeHandle({ set, request }) {
 						const apiKey = request.headers.get("api-key");
