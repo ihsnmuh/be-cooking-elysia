@@ -3,7 +3,6 @@
 ### Get all categories
 GET http://localhost:3001/api/v1/categories
 api-key: selalu-bersyukur
-Authorization: Bearer e629153b-c124-41a3-95f4-faf8d7d55444
 
 ### Get all categories by recipeId
 GET http://localhost:3001/api/v1/categories/recipe?recipeId=asdf

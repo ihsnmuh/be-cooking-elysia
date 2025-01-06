@@ -12,6 +12,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 		{
 			headers: t.Object({
 				authorization: t.TemplateLiteral("Bearer ${string}"),
+				"api-key": t.String(),
 			}),
 
 			beforeHandle: async ({ headers }) => {
@@ -74,10 +75,6 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 							description: "Create a new category (Admin only).",
 						},
 
-						headers: t.Object({
-							authorization: t.String({ description: "Bearer token" }),
-						}),
-
 						body: t.Object({
 							name: t.String(),
 							imageUrl: t.String(),
@@ -131,10 +128,6 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 							description: "Update a category (Admin only).",
 						},
 
-						headers: t.Object({
-							authorization: t.String({ description: "Bearer token" }),
-						}),
-
 						body: t.Object({
 							name: t.Optional(t.String()),
 							imageUrl: t.Optional(t.String()),
@@ -181,10 +174,6 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 							tags: ["Categories"],
 							description: "Delete a category by ID (Admin only).",
 						},
-
-						headers: t.Object({
-							authorization: t.String({ description: "Bearer token" }),
-						}),
 					},
 				),
 	)

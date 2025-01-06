@@ -52,8 +52,8 @@ const app = new Elysia()
 					headers: t.Object({
 						"api-key": t.String(),
 					}),
-					beforeHandle({ set, request }) {
-						const apiKey = request.headers.get("api-key");
+					beforeHandle({ set, headers }) {
+						const apiKey = headers["api-key"];
 
 						if (!apiKey) {
 							console.log("API Key is missing");
