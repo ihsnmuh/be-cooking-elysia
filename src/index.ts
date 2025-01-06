@@ -1,7 +1,7 @@
 import cors from "@elysiajs/cors";
 import staticPlugin from "@elysiajs/static";
 import swagger from "@elysiajs/swagger";
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { AuthorizationError } from "./infrastructure/entity/error";
 import { authRouter } from "./presentation/router/authRouter";
 import { categoryRouter } from "./presentation/router/categoryRouter";
@@ -13,15 +13,11 @@ import { uploadRouter } from "./presentation/router/uploadRouter";
 
 const app = new Elysia()
 
-	.use(cors())
-	.onBeforeHandle(({ headers, set }) => {
-		const apiKey = headers["api-key"];
-
-		if (apiKey !== process.env.API_KEY) {
-			set.status = 401;
-			return new AuthorizationError("You are not allowed!");
-		}
+	.get("/test", () => {
+		return "ok";
 	})
+
+	.use(cors())
 
 	// swagger plugin handler
 	.use(
@@ -41,6 +37,23 @@ const app = new Elysia()
 	// Group /api
 	.group("/api", (app) =>
 		app
+			.guard({
+				headers: t.Object({
+					authorization: t.Optional(t.TemplateLiteral("Bearer ${string}")),
+				}),
+
+				async beforeHandle({ set, request }) {
+					console.log("🚀 ~ beforeHandle ~ request:", request.headers);
+
+					const apiKey = request.headers.get("api-key");
+
+					if (apiKey !== process.env.API_KEY) {
+						set.status = 401;
+						return new AuthorizationError("You are not allowed!");
+					}
+				},
+			})
+
 			//* Routes
 			.use(authRouter)
 			.use(categoryRouter)

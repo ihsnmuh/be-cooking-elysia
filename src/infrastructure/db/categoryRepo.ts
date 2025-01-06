@@ -132,7 +132,7 @@ export class CategoryRepository implements ICategory {
 			});
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				throw new DBError("Error updating resource in DB");
+				throw new DBError("Error delete resource in DB");
 			}
 
 			throw new DBError("Something went wrong while doing DB operation");

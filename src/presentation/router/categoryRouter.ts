@@ -1,8 +1,193 @@
 import Elysia, { t } from "elysia";
 import { authServices, categoryServices } from "../../application/instance";
-import { AuthorizationError } from "../../infrastructure/entity/error";
+import {
+	ApplicationError,
+	AuthorizationError,
+} from "../../infrastructure/entity/error";
+import { generalDTO } from "../../application/dtos/generalDTO";
 
 export const categoryRouter = new Elysia({ prefix: "/v1" })
+
+	.guard(
+		{
+			headers: t.Object({
+				authorization: t.TemplateLiteral("Bearer ${string}"),
+			}),
+
+			beforeHandle: async ({ headers }) => {
+				const sessionId = headers.authorization?.split(" ")[1];
+				if (!sessionId) throw new AuthorizationError("Unauthorized");
+
+				const { user } = await authServices.decodeSession(sessionId);
+				if (user.role !== "ADMIN")
+					throw new AuthorizationError("You are not allow");
+			},
+		},
+		(app) =>
+			app
+				// * Create category
+				.post(
+					"/categories",
+					async ({ body, set }) => {
+						try {
+							const newCategory = await categoryServices.create({
+								name: body.name.toLocaleLowerCase(),
+								imageUrl: body.imageUrl ?? "",
+							});
+
+							set.status = 201;
+							return new generalDTO(
+								"success",
+								"create category successfully",
+								201,
+								newCategory,
+							).dataResult();
+						} catch (error) {
+							if (error instanceof ApplicationError) {
+								set.status = error.status;
+
+								return new generalDTO(
+									"error",
+									error.message,
+									set.status,
+									null,
+								).dataResult();
+							}
+
+							set.status = 500;
+							const errorMessage =
+								error instanceof Error
+									? error.message
+									: "Something went wrong!";
+
+							return new generalDTO(
+								"error",
+								errorMessage,
+								set.status,
+								null,
+							).dataResult();
+						}
+					},
+					{
+						detail: {
+							tags: ["Categories"],
+							description: "Create a new category (Admin only).",
+						},
+
+						headers: t.Object({
+							authorization: t.String({ description: "Bearer token" }),
+						}),
+
+						body: t.Object({
+							name: t.String(),
+							imageUrl: t.String(),
+						}),
+					},
+				)
+
+				// * Update category
+				.patch(
+					"/categories/:categoryId",
+					async ({ body, params, set }) => {
+						try {
+							const updatedCategory = await categoryServices.update(
+								params.categoryId,
+								{
+									name: body.name?.toLocaleLowerCase(),
+									imageUrl: body.imageUrl ?? "",
+								},
+							);
+
+							return updatedCategory;
+						} catch (error) {
+							if (error instanceof ApplicationError) {
+								set.status = error.status;
+
+								return new generalDTO(
+									"error",
+									error.message,
+									set.status,
+									null,
+								).dataResult();
+							}
+
+							set.status = 500;
+							const errorMessage =
+								error instanceof Error
+									? error.message
+									: "Something went wrong!";
+
+							return new generalDTO(
+								"error",
+								errorMessage,
+								set.status,
+								null,
+							).dataResult();
+						}
+					},
+					{
+						detail: {
+							tags: ["Categories"],
+							description: "Update a category (Admin only).",
+						},
+
+						headers: t.Object({
+							authorization: t.String({ description: "Bearer token" }),
+						}),
+
+						body: t.Object({
+							name: t.Optional(t.String()),
+							imageUrl: t.Optional(t.String()),
+						}),
+					},
+				)
+
+				// * Delete category
+				.delete(
+					"/categories/:categoryId",
+					async ({ params, set }) => {
+						try {
+							await categoryServices.delete(params.categoryId);
+
+							set.status = 204;
+						} catch (error) {
+							if (error instanceof ApplicationError) {
+								set.status = error.status;
+
+								return new generalDTO(
+									"error",
+									error.message,
+									set.status,
+									null,
+								).dataResult();
+							}
+
+							set.status = 500;
+							const errorMessage =
+								error instanceof Error
+									? error.message
+									: "Something went wrong!";
+
+							return new generalDTO(
+								"error",
+								errorMessage,
+								set.status,
+								null,
+							).dataResult();
+						}
+					},
+					{
+						detail: {
+							tags: ["Categories"],
+							description: "Delete a category by ID (Admin only).",
+						},
+
+						headers: t.Object({
+							authorization: t.String({ description: "Bearer token" }),
+						}),
+					},
+				),
+	)
 
 	// * Get all categories
 	.get(
@@ -11,15 +196,35 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 			try {
 				const allCategories = await categoryServices.getAll();
 
-				return allCategories;
+				set.status = 200;
+				return new generalDTO(
+					"success",
+					"get categories successfully",
+					200,
+					allCategories,
+				).dataResult();
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -39,15 +244,34 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 					query.recipeId,
 				);
 
-				return categories;
+				return new generalDTO(
+					"success",
+					"get categories successfully",
+					200,
+					categories,
+				).dataResult();
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -69,164 +293,40 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 			try {
 				const category = await categoryServices.getOne(params.categoryIdOrName);
 
-				return category;
+				return new generalDTO(
+					"success",
+					"get categories successfully",
+					200,
+					category,
+				).dataResult();
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
 			detail: {
 				tags: ["Categories"],
 				description: "Fetch one category by ID or name.",
-			},
-		},
-	)
-
-	// * Create category
-	.post(
-		"/categories",
-		async ({ body, set }) => {
-			try {
-				const newCategory = await categoryServices.create({
-					name: body.name.toLocaleLowerCase(),
-					imageUrl: body.imageUrl ?? "",
-				});
-
-				set.status = 201;
-				return newCategory;
-			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
-				}
-
-				throw new Error("Something went wrong!");
-			}
-		},
-		{
-			detail: {
-				tags: ["Categories"],
-				description: "Create a new category (Admin only).",
-			},
-
-			headers: t.Object({
-				authorization: t.String({ description: "Bearer token" }),
-			}),
-
-			body: t.Object({
-				name: t.String(),
-				imageUrl: t.String(),
-			}),
-
-			// * Middleware
-			beforeHandle: async ({ headers }) => {
-				const sessionId = headers.authorization?.split(" ")[1];
-
-				if (!sessionId) throw new AuthorizationError("Unauthorized");
-
-				const { user } = await authServices.decodeSession(sessionId);
-
-				if (user.role !== "ADMIN") throw new AuthorizationError("Unauthorized");
-			},
-		},
-	)
-
-	// * Update category
-	.patch(
-		"/categories/:categoryId",
-		async ({ body, params, set }) => {
-			try {
-				const updatedCategory = await categoryServices.update(
-					params.categoryId,
-					{
-						name: body.name?.toLocaleLowerCase(),
-						imageUrl: body.imageUrl ?? "",
-					},
-				);
-
-				return updatedCategory;
-			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
-				}
-
-				throw new Error("Something went wrong!");
-			}
-		},
-		{
-			detail: {
-				tags: ["Categories"],
-				description: "Update a category (Admin only).",
-			},
-
-			headers: t.Object({
-				authorization: t.String({ description: "Bearer token" }),
-			}),
-
-			body: t.Object({
-				name: t.Optional(t.String()),
-				imageUrl: t.Optional(t.String()),
-			}),
-
-			// * Middleware
-			beforeHandle: async ({ headers }) => {
-				const sessionId = headers.authorization?.split(" ")[1];
-
-				if (!sessionId) throw new AuthorizationError("Unauthorized");
-
-				const { user } = await authServices.decodeSession(sessionId);
-
-				if (user.role !== "ADMIN") throw new AuthorizationError("Unauthorized");
-			},
-		},
-	)
-
-	// * Delete category
-	.delete(
-		"/categories/:categoryId",
-		async ({ params, set }) => {
-			try {
-				await categoryServices.delete(params.categoryId);
-
-				set.status = 204;
-			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
-				}
-
-				throw new Error("Something went wrong!");
-			}
-		},
-		{
-			detail: {
-				tags: ["Categories"],
-				description: "Delete a category by ID (Admin only).",
-			},
-
-			headers: t.Object({
-				authorization: t.String({ description: "Bearer token" }),
-			}),
-
-			// * Middleware
-			beforeHandle: async ({ headers }) => {
-				const sessionId = headers.authorization?.split(" ")[1];
-
-				if (!sessionId) throw new AuthorizationError("Unauthorized");
-
-				const { user } = await authServices.decodeSession(sessionId);
-
-				if (user.role !== "ADMIN") throw new AuthorizationError("Unauthorized");
 			},
 		},
 	);

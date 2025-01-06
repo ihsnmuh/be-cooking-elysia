@@ -184,7 +184,7 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 				}
 
 				set.status = 200;
-				return new generalDTO("success", "Login successful", set.status, {
+				return new generalDTO("success", "Session is valid", set.status, {
 					status: "valid",
 				}).dataResult();
 			} catch (error) {
