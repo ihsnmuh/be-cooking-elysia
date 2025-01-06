@@ -95,7 +95,13 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 								},
 							);
 
-							return updatedCategory;
+							set.status = 200;
+							return new generalDTO(
+								"success",
+								"create category successfully",
+								200,
+								updatedCategory,
+							).dataResult();
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
@@ -142,7 +148,15 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 						try {
 							await categoryServices.delete(params.categoryId);
 
-							set.status = 204;
+							set.status = 200;
+							return new generalDTO(
+								"success",
+								"delete category successfully",
+								200,
+								{
+									message: "category is deleted",
+								},
+							).dataResult();
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
