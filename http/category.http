@@ -2,21 +2,22 @@
 
 ### Get all categories
 GET http://localhost:3001/api/v1/categories
-Api-Key: selalu-bersyukur
+api-key: selalu-bersyukur
+Authorization: Bearer e629153b-c124-41a3-95f4-faf8d7d55444
 
 ### Get all categories by recipeId
 GET http://localhost:3001/api/v1/categories/recipe?recipeId=asdf
-Api-Key: selalu-bersyukur
+api-key: selalu-bersyukur
 
 ### Get category by id or name
 GET http://localhost:3001/api/v1/categories/breakfast
-Api-Key: selalu-bersyukur
+api-key: selalu-bersyukur
 
 ### Create a category
 POST http://localhost:3001/api/v1/categories
 Content-Type: application/json
-Api-Key: selalu-bersyukur
-Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+Authorization: Bearer e629153b-c124-41a3-95f4-faf8d7d55444
+api-key: selalu-bersyukur
 
 {
     "name": "Breakfast",
@@ -26,8 +27,8 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 ### Update a category
 PATCH http://localhost:3001/api/v1/categories/a2040076-31b3-4ffc-8c4c-316e89dff17d
 Content-Type: application/json
-Api-Key: selalu-bersyukur
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+api-key: selalu-bersyukur
 
 {
     "name": "Brunch",
@@ -36,5 +37,5 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 
 ### Delete a category
 DELETE http://localhost:3001/api/v1/categories/8a04a2b3-ab6d-47e2-831d-b3cb54f57991
-Api-Key: selalu-bersyukur
+api-key: selalu-bersyukur
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562

@@ -2,17 +2,21 @@
 
 ### Get all instructions
 GET http://localhost:3000/api/v1/instructions
+api-key: selalu-bersyukur
 
 ### Get all instructions by recipeId
 GET http://localhost:3000/api/v1/instructions/recipe?recipeId=asdf
+api-key: selalu-bersyukur
 
 ### Get instruction by id
 GET http://localhost:3000/api/v1/instructions/6d33560a-093b-4713-8dfc-049ba978d4d1
+api-key: selalu-bersyukur
 
 ### Create an instruction
 POST http://localhost:3000/api/v1/instructions
 Content-Type: application/json
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+api-key: selalu-bersyukur
 
 {
     "recipeId": "asdf",
@@ -24,6 +28,7 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 PATCH http://localhost:3000/api/v1/instructions/6d33560a-093b-4713-8dfc-049ba978d4d1
 Content-Type: application/json
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+api-key: selalu-bersyukur
 
 {
     "stepNumber": 1,
@@ -33,3 +38,4 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 ### Delete an instruction
 DELETE http://localhost:3000/api/v1/instructions/6d33560a-093b-4713-8dfc-049ba978d4d1
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+api-key: selalu-bersyukur

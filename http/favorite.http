@@ -2,10 +2,12 @@
 
 ### Get all favorite by userId
 GET http://localhost:3000/api/v1/favorites
+api-key: selalu-bersyukur
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
 
 ### Create favorite
 POST http://localhost:3000/api/v1/favorites
+api-key: selalu-bersyukur
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
 Content-Type: application/json
 
@@ -15,4 +17,5 @@ Content-Type: application/json
 
 ### Delete favorite
 DELETE http://localhost:3000/api/v1/favorites/047b5b42-d5f9-4603-b95a-265836ac1790
+api-key: selalu-bersyukur
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e

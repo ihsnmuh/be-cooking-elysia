@@ -1,18 +1,22 @@
 ## Category
 
 ### Get all ingredients
-GET http://localhost:3000/api/v1/ingredients
+GET http://localhost:3001/api/v1/ingredients
+api-key: selalu-bersyukur
 
 ### Get all ingredients by recipeId
-GET http://localhost:3000/api/v1/ingredients/recipe?recipeId=asdf
+GET http://localhost:3001/api/v1/ingredients/recipe?recipeId=asdf
+api-key: selalu-bersyukur
 
 ### Get category by id or name
-GET http://localhost:3000/api/v1/ingredients/breakfast
+GET http://localhost:3001/api/v1/ingredients/breakfast
+api-key: selalu-bersyukur
 
 ### Create a category
-POST http://localhost:3000/api/v1/ingredients
+POST http://localhost:3001/api/v1/ingredients
 Content-Type: application/json
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+api-key: selalu-bersyukur
 
 {
     "name": "Chili",
@@ -20,9 +24,10 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 }
 
 ### Update a category
-PATCH http://localhost:3000/api/v1/ingredients/6d33560a-093b-4713-8dfc-049ba978d4d1
+PATCH http://localhost:3001/api/v1/ingredients/6d33560a-093b-4713-8dfc-049ba978d4d1
 Content-Type: application/json
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+api-key: selalu-bersyukur
 
 {
     "name": "eggs",
@@ -30,5 +35,6 @@ Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
 }
 
 ### Delete a category
-DELETE http://localhost:3000/api/v1/ingredients/c971ff94-6b0c-4db0-a6c6-5a6da15dbceb
+DELETE http://localhost:3001/api/v1/ingredients/c971ff94-6b0c-4db0-a6c6-5a6da15dbceb
 Authorization: Bearer 51cc0e81-4dcb-43f2-8a3d-ce77c99ac562
+api-key: selalu-bersyukur

@@ -2,23 +2,29 @@
 
 ### Get all recipes
 GET http://localhost:3000/api/v1/recipes
+api-key: selalu-bersyukur
 
 ### Get all recipes by UserId
 GET http://localhost:3000/api/v1/recipes/user?userId=65ec35c0-121f-4313-b55f-406143e5d955
+api-key: selalu-bersyukur
 
 ### Get all recipes by CategoryId
 GET http://localhost:3000/api/v1/recipes/category?categoryId=317e79e1-eb88-4e8e-8900-b4926b0b071a
+api-key: selalu-bersyukur
 
 ### Get all recipes by IngredientId
 GET http://localhost:3000/api/v1/recipes/ingredient?ingredientId=6d33560a-093b-4713-8dfc-049ba978d4d1
+api-key: selalu-bersyukur
 
 ### Get one recipe
 GET http://localhost:3000/api/v1/recipes/535fe1b1-82d5-495d-96df-9697687507ce
+api-key: selalu-bersyukur
 
 ### Create recipe
 POST http://localhost:3000/api/v1/recipes
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
 Content-Type: application/json
+api-key: selalu-bersyukur
 
 {
     "title": "Pisang Goreng",
@@ -51,6 +57,7 @@ Content-Type: application/json
 PATCH http://localhost:3000/api/v1/recipes/535fe1b1-82d5-495d-96df-9697687507ce
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
 Content-Type: application/json
+api-key: selalu-bersyukur
 
 {
     "title": "Pisang Goreng Update lagi",
@@ -85,3 +92,4 @@ Content-Type: application/json
 ### Delete recipe
 DELETE http://localhost:3000/api/v1/recipes/535fe1b1-82d5-495d-96df-9697687507ce
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
+api-key: selalu-bersyukur
