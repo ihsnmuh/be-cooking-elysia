@@ -17,7 +17,16 @@ const app = new Elysia()
 		return "ok";
 	})
 
-	.use(cors())
+	.use(
+		cors({
+			origin: "*", // Or specify your allowed origins
+			methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+			allowedHeaders: ["Content-Type", "Authorization", "api-key"],
+			exposeHeaders: ["Content-Type", "Authorization", "api-key"],
+			credentials: true,
+			maxAge: 3600,
+		}),
+	)
 
 	// swagger plugin handler
 	.use(
@@ -37,31 +46,40 @@ const app = new Elysia()
 	// Group /api
 	.group("/api", (app) =>
 		app
-			.guard({
-				headers: t.Object({
-					authorization: t.Optional(t.TemplateLiteral("Bearer ${string}")),
-				}),
+			// * Guard
+			.guard(
+				{
+					headers: t.Object({
+						"api-key": t.String(),
+						authorization: t.Optional(t.TemplateLiteral("Bearer ${string}")),
+					}),
+					beforeHandle({ set, request }) {
+						const apiKey = request.headers.get("api-key");
 
-				async beforeHandle({ set, request }) {
-					console.log("🚀 ~ beforeHandle ~ request:", request.headers);
+						if (!apiKey) {
+							console.log("API Key is missing");
+							set.status = 401;
+							return new AuthorizationError("API Key is required!");
+						}
 
-					const apiKey = request.headers.get("api-key");
-
-					if (apiKey !== process.env.API_KEY) {
-						set.status = 401;
-						return new AuthorizationError("You are not allowed!");
-					}
+						if (apiKey !== process.env.API_KEY) {
+							console.log("Invalid API Key");
+							set.status = 401;
+							return new AuthorizationError("You are not allowed!");
+						}
+					},
 				},
-			})
-
-			//* Routes
-			.use(authRouter)
-			.use(categoryRouter)
-			.use(ingredientRouter)
-			.use(instructionRouter)
-			.use(recipeRouter)
-			.use(favoriteRouter)
-			.use(uploadRouter),
+				(app) =>
+					app
+						//* Routes
+						.use(authRouter)
+						.use(categoryRouter)
+						.use(ingredientRouter)
+						.use(instructionRouter)
+						.use(recipeRouter)
+						.use(favoriteRouter)
+						.use(uploadRouter),
+			),
 	)
 
 	// Serve the "public" directory as static files
