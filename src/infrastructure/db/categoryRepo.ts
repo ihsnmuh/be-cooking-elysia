@@ -1,7 +1,9 @@
 import { Prisma, type PrismaClient } from "@prisma/client";
 import type {
 	ICategory,
+	TSortOption,
 	TCreateCategory,
+	TGetAllParams,
 	TUpdateCategory,
 } from "../entity/interface";
 import { DBError } from "../entity/error";
@@ -17,10 +19,66 @@ export class CategoryRepository implements ICategory {
 		this.prisma = prisma;
 	}
 
-	async getAll() {
+	private getSortOptions(
+		sort?: TSortOption,
+	): Prisma.UserOrderByWithRelationInput {
+		switch (sort) {
+			case "a-z":
+				return { name: "asc" };
+			case "z-a":
+				return { name: "desc" };
+			case "newest":
+				return { createdAt: "desc" };
+			case "latest":
+				return { updatedAt: "desc" };
+
+			default:
+				return { name: "asc" };
+		}
+	}
+
+	async getAll(params: TGetAllParams) {
+		const { page = 1, limit = 10, sort = "a-z", search } = params || {};
+
+		// Calculate skip value for pagination
+		const skip = (page - 1) * limit;
+
+		// sort list
+		const order = this.getSortOptions(sort);
+
+		// Get total count for pagination
+		const total = await this.prisma.category.count({
+			where: {
+				name: {
+					contains: search,
+					mode: "insensitive",
+				},
+			},
+		});
+
 		try {
-			const categories = await this.prisma.category.findMany();
-			return categories;
+			const categories = await this.prisma.category.findMany({
+				where: {
+					name: {
+						contains: search,
+						mode: "insensitive",
+					},
+				},
+				skip,
+				take: limit,
+				orderBy: order,
+			});
+			return {
+				data: categories,
+				metadata: {
+					total,
+					page,
+					limit,
+					totalPages: Math.ceil(total / limit),
+					hasNextPage: skip + categories.length < total,
+					hasPreviousPage: page > 1,
+				},
+			};
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
@@ -39,6 +97,9 @@ export class CategoryRepository implements ICategory {
 							id: recipeId,
 						},
 					},
+				},
+				orderBy: {
+					name: "asc",
 				},
 			});
 

@@ -10,6 +10,22 @@ import type {
 	User,
 } from "@prisma/client";
 
+// Define types for pagination and sorting
+export type TPaginationParams = {
+	page?: number;
+	limit?: number;
+};
+
+export type TSortOption = "newest" | "latest" | "a-z" | "z-a";
+
+// All fields are optional in GetAllParams
+export type TGetAllParams = Partial<{
+	page: number;
+	limit: number;
+	sort: TSortOption;
+	search: string;
+}>;
+
 export type TCreateUser = Omit<User, "id" | "createdAt" | "updatedAt">;
 export type TUpdateUser = Partial<User>;
 
@@ -55,6 +71,7 @@ export type TCreateInstruction = Omit<
 >;
 export type TUpdateInstruction = Partial<Instruction>;
 
+export type TGetAllCategory = { data: Category[]; metadata: TGetAllParams };
 export type TCreateCategory = Omit<Category, "id" | "createdAt" | "updatedAt">;
 export type TUpdateCategory = Partial<Category>;
 
@@ -131,7 +148,7 @@ export interface IInstruction {
 
 //* Category
 export interface ICategory {
-	getAll: () => Promise<Category[]>;
+	getAll: (params: TGetAllParams) => Promise<TGetAllCategory>;
 	getAllByRecipeId: (recipeId: string) => Promise<Category[] | undefined>;
 	getOne: (id: string) => Promise<Category>;
 	create: (data: TCreateCategory) => Promise<Category>;

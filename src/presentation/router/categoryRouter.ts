@@ -195,9 +195,9 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 	// * Get all categories
 	.get(
 		"/categories",
-		async ({ set }) => {
+		async ({ set, query }) => {
 			try {
-				const allCategories = await categoryServices.getAll();
+				const allCategories = await categoryServices.getAll(query);
 
 				set.status = 200;
 				return new generalDTO(
@@ -235,6 +235,15 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 				tags: ["Categories"],
 				description: "Fetch all categories.",
 			},
+
+			query: t.Optional(
+				t.Object({
+					page: t.Optional(t.Number()),
+					limit: t.Optional(t.Number()),
+					sort: t.Optional(t.String()),
+					search: t.Optional(t.String()),
+				}),
+			),
 		},
 	)
 

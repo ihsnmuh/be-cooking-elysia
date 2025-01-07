@@ -4,6 +4,7 @@ import type { CategoryRepository } from "../../infrastructure/db/categoryRepo";
 import { TYPES } from "../../infrastructure/entity/type";
 import type {
 	TCreateCategory,
+	TGetAllParams,
 	TUpdateCategory,
 } from "../../infrastructure/entity/interface";
 
@@ -15,8 +16,8 @@ export class CategoryServices {
 		this.categoryRepo = categoryRepo;
 	}
 
-	async getAll() {
-		const allCategories = await this.categoryRepo.getAll();
+	async getAll(params: TGetAllParams) {
+		const allCategories = await this.categoryRepo.getAll(params);
 		return allCategories;
 	}
 
