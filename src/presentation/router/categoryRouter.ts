@@ -240,7 +240,14 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 				t.Object({
 					page: t.Optional(t.Number()),
 					limit: t.Optional(t.Number()),
-					sort: t.Optional(t.String()),
+					sort: t.Optional(
+						t.Union([
+							t.Literal("newest"),
+							t.Literal("latest"),
+							t.Literal("a-z"),
+							t.Literal("z-a"),
+						]),
+					),
 					search: t.Optional(t.String()),
 				}),
 			),
