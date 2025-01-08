@@ -36,7 +36,7 @@ export class InstructionRepository implements IInstruction {
 					recipeId: recipeId,
 				},
 				orderBy: {
-					stepNumber: "asc"
+					stepNumber: "asc",
 				},
 			});
 
