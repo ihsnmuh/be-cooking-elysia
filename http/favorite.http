@@ -1,21 +1,21 @@
 ## Favorite
 
 ### Get all favorite by userId
-GET http://localhost:3000/api/v1/favorites
+GET http://localhost:3001/api/v1/favorites
 api-key: selalu-bersyukur
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
 
 ### Create favorite
-POST http://localhost:3000/api/v1/favorites
+POST http://localhost:3001/api/v1/favorites
 api-key: selalu-bersyukur
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e
 Content-Type: application/json
 
 {
-    "recipeId": "93c2186c-6c47-44bc-bd98-6ea2c6f66ec7"
+    "recipeId": "1fb978ef-7587-4c29-99c1-375b6d1f0ac3"
 }
 
 ### Delete favorite
-DELETE http://localhost:3000/api/v1/favorites/047b5b42-d5f9-4603-b95a-265836ac1790
+DELETE http://localhost:3001/api/v1/favorites/546222a2-dc35-4dfb-91e2-0d6ba6b2e5e0
 api-key: selalu-bersyukur
 Authorization: Bearer 0fc43e63-a938-43be-b70e-8e9e7ee14c1e

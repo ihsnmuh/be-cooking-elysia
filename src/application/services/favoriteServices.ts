@@ -3,6 +3,7 @@ import { inject, injectable } from "inversify";
 import type { FavoriteRepository } from "../../infrastructure/db/favoriteRepo";
 import { TYPES } from "../../infrastructure/entity/type";
 import type { TCreateFavorite } from "../../infrastructure/entity/interface";
+import { ValidationError } from "../../infrastructure/entity/error";
 
 @injectable()
 export class FavoriteService {
@@ -27,7 +28,7 @@ export class FavoriteService {
 				.length > 0;
 
 		if (checkSameFavorite) {
-			throw new Error("Recipe Already on Favorite List");
+			throw new ValidationError("Recipe Already on Favorite List");
 		}
 
 		const newFavorite = await this.favoriteRepo.create(data);

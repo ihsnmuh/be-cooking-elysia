@@ -80,7 +80,7 @@ export class FavoriteRepository implements IFavorite {
 			});
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				throw new DBError("Error creating resource in DB");
+				throw new DBError("Error delete resource in DB");
 			}
 
 			throw new DBError("Something went wrong while doing DB operation");

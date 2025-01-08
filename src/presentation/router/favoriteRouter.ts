@@ -1,6 +1,10 @@
 import Elysia, { t } from "elysia";
 import { authServices, favoriteService } from "../../application/instance";
-import { AuthorizationError } from "../../infrastructure/entity/error";
+import {
+	ApplicationError,
+	AuthorizationError,
+} from "../../infrastructure/entity/error";
+import { generalDTO } from "../../application/dtos/generalDTO";
 
 export const favoriteRouter = new Elysia({ prefix: "/v1" })
 
@@ -19,15 +23,36 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 		async ({ set, user }) => {
 			try {
 				const favorites = await favoriteService.getAllByUserId(user.id);
-				return favorites;
-			} catch (error) {
-				set.status = 500;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
+				set.status = 200;
+				return new generalDTO(
+					"success",
+					"get favorites successfully",
+					200,
+					favorites,
+				).dataResult();
+			} catch (error) {
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -38,6 +63,7 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 
 			headers: t.Object({
 				authorization: t.String({ description: "Bearer token" }),
+				"api-key": t.String(),
 			}),
 		},
 	)
@@ -53,15 +79,34 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 				});
 
 				set.status = 201;
-				return newFavorite;
+				return new generalDTO(
+					"success",
+					"add favorite successfully",
+					200,
+					newFavorite,
+				).dataResult();
 			} catch (error) {
-				set.status = 500;
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -72,6 +117,7 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 
 			headers: t.Object({
 				authorization: t.String({ description: "Bearer token" }),
+				"api-key": t.String(),
 			}),
 
 			body: t.Object({
@@ -86,15 +132,33 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 		async ({ set, params, user }) => {
 			try {
 				await favoriteService.delete(params.favoriteId, user.id);
-				return { status: "success" };
-			} catch (error) {
-				set.status = 500;
+				set.status = 200;
 
-				if (error instanceof Error) {
-					throw new Error(error.message);
+				return new generalDTO("success", "delete favorites successfully", 200, {
+					status: "success",
+				}).dataResult();
+			} catch (error) {
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+
+					return new generalDTO(
+						"error",
+						error.message,
+						set.status,
+						null,
+					).dataResult();
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+
+				return new generalDTO(
+					"error",
+					errorMessage,
+					set.status,
+					null,
+				).dataResult();
 			}
 		},
 		{
@@ -105,6 +169,7 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 
 			headers: t.Object({
 				authorization: t.String({ description: "Bearer token" }),
+				"api-key": t.String(),
 			}),
 
 			params: t.Object({
