@@ -1,6 +1,6 @@
 import Elysia, { t } from "elysia";
 import { authServices } from "../../application/instance";
-import { generalDTO } from "../../application/dtos/generalDTO";
+import { ResponseDTO } from "../../application/dtos/responseDTO";
 import { ApplicationError } from "../../infrastructure/entity/error";
 
 export const authRouter = new Elysia({ prefix: "/v1" })
@@ -19,33 +19,21 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 				);
 
 				set.status = 201;
-				return new generalDTO(
-					"success",
-					"User registered successfully",
+				return ResponseDTO.success(
+					"Registered successfully",
 					set.status,
 					newUser,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -75,30 +63,19 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 				);
 
 				set.status = 200;
-				return new generalDTO("success", "Login successful", set.status, {
+				return ResponseDTO.success("Login successfully", set.status, {
 					sessionId: session.id,
-				}).dataResult();
+				});
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -128,31 +105,20 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 
 				if (isValid !== "valid") {
 					set.status = 401;
-					return { status: "invalid" };
+					return ResponseDTO.error("Logout is invalid", set.status);
 				}
 
 				await authServices.logoutUser(sessionId);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -178,36 +144,23 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 
 				if (isValid !== "valid") {
 					set.status = 401;
-					return new generalDTO("error", "Session is invalid", set.status, {
-						status: "invalid",
-					}).dataResult();
+					return ResponseDTO.error("Session is invalid", set.status);
 				}
 
 				set.status = 200;
-				return new generalDTO("success", "Session is valid", set.status, {
+				return ResponseDTO.success("Session is valid", set.status, {
 					status: "valid",
-				}).dataResult();
+				});
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{

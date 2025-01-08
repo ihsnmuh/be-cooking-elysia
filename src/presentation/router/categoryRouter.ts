@@ -4,7 +4,7 @@ import {
 	ApplicationError,
 	AuthorizationError,
 } from "../../infrastructure/entity/error";
-import { generalDTO } from "../../application/dtos/generalDTO";
+import { ResponseDTO } from "../../application/dtos/responseDTO";
 
 export const categoryRouter = new Elysia({ prefix: "/v1" })
 
@@ -37,22 +37,15 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 							});
 
 							set.status = 201;
-							return new generalDTO(
-								"success",
+							return ResponseDTO.success(
 								"create category successfully",
 								201,
 								newCategory,
-							).dataResult();
+							);
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
-
-								return new generalDTO(
-									"error",
-									error.message,
-									set.status,
-									null,
-								).dataResult();
+								return ResponseDTO.error(error.message, error.status);
 							}
 
 							set.status = 500;
@@ -60,13 +53,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 								error instanceof Error
 									? error.message
 									: "Something went wrong!";
-
-							return new generalDTO(
-								"error",
-								errorMessage,
-								set.status,
-								null,
-							).dataResult();
+							return ResponseDTO.error(errorMessage, set.status);
 						}
 					},
 					{
@@ -96,22 +83,15 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 							);
 
 							set.status = 200;
-							return new generalDTO(
-								"success",
-								"create category successfully",
+							return ResponseDTO.success(
+								"Update category successfully",
 								200,
 								updatedCategory,
-							).dataResult();
+							);
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
-
-								return new generalDTO(
-									"error",
-									error.message,
-									set.status,
-									null,
-								).dataResult();
+								return ResponseDTO.error(error.message, error.status);
 							}
 
 							set.status = 500;
@@ -119,13 +99,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 								error instanceof Error
 									? error.message
 									: "Something went wrong!";
-
-							return new generalDTO(
-								"error",
-								errorMessage,
-								set.status,
-								null,
-							).dataResult();
+							return ResponseDTO.error(errorMessage, set.status);
 						}
 					},
 					{
@@ -149,24 +123,17 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 							await categoryServices.delete(params.categoryId);
 
 							set.status = 200;
-							return new generalDTO(
-								"success",
-								"delete category successfully",
-								200,
+							return ResponseDTO.success(
+								"Registered successfully",
+								set.status,
 								{
 									message: "category is deleted",
 								},
-							).dataResult();
+							);
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
-
-								return new generalDTO(
-									"error",
-									error.message,
-									set.status,
-									null,
-								).dataResult();
+								return ResponseDTO.error(error.message, error.status);
 							}
 
 							set.status = 500;
@@ -174,13 +141,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 								error instanceof Error
 									? error.message
 									: "Something went wrong!";
-
-							return new generalDTO(
-								"error",
-								errorMessage,
-								set.status,
-								null,
-							).dataResult();
+							return ResponseDTO.error(errorMessage, set.status);
 						}
 					},
 					{
@@ -200,34 +161,21 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 				const allCategories = await categoryServices.getAll(query);
 
 				set.status = 200;
-				return new generalDTO(
-					"success",
-					"get categories successfully",
+				return ResponseDTO.success(
+					"Registered successfully",
 					200,
 					allCategories,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -245,7 +193,7 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 							t.Literal("newest"),
 							t.Literal("latest"),
 							t.Literal("a-z"),
-							t.Literal("z-a"),
+							t.Literal("newest"),
 						]),
 					),
 					search: t.Optional(t.String()),
@@ -263,34 +211,22 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 					query.recipeId,
 				);
 
-				return new generalDTO(
-					"success",
+				set.status = 200;
+				return ResponseDTO.success(
 					"get categories successfully",
 					200,
 					categories,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -312,34 +248,21 @@ export const categoryRouter = new Elysia({ prefix: "/v1" })
 			try {
 				const category = await categoryServices.getOne(params.categoryIdOrName);
 
-				return new generalDTO(
-					"success",
+				return ResponseDTO.success(
 					"get categories successfully",
 					200,
 					category,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{

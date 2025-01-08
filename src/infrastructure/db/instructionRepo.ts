@@ -35,6 +35,9 @@ export class InstructionRepository implements IInstruction {
 				where: {
 					recipeId: recipeId,
 				},
+				orderBy: {
+					stepNumber: "asc"
+				},
 			});
 
 			if (!instructions) {

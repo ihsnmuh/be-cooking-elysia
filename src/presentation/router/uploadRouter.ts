@@ -5,7 +5,7 @@ import {
 	UploadError,
 } from "../../infrastructure/entity/error";
 import { unlink } from "node:fs/promises";
-import { generalDTO } from "../../application/dtos/generalDTO";
+import { ResponseDTO } from "../../application/dtos/responseDTO";
 
 export const uploadRouter = new Elysia({ prefix: "/v1" })
 
@@ -51,30 +51,19 @@ export const uploadRouter = new Elysia({ prefix: "/v1" })
 					await unlink(uploadPath);
 				}
 
-				return new generalDTO("success", "Image uploaded successfully", 200, {
+				return ResponseDTO.success("Image uploaded successfully", 200, {
 					url: result.secure_url,
-				}).dataResult();
+				});
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{

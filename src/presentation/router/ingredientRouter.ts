@@ -4,7 +4,7 @@ import {
 	ApplicationError,
 	AuthorizationError,
 } from "../../infrastructure/entity/error";
-import { generalDTO } from "../../application/dtos/generalDTO";
+import { ResponseDTO } from "../../application/dtos/responseDTO";
 
 export const ingredientRouter = new Elysia({ prefix: "/v1" })
 
@@ -38,22 +38,15 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 							});
 
 							set.status = 201;
-							return new generalDTO(
-								"success",
+							return ResponseDTO.success(
 								"create ingredient successfully",
 								201,
 								newIngredient,
-							).dataResult();
+							);
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
-
-								return new generalDTO(
-									"error",
-									error.message,
-									set.status,
-									null,
-								).dataResult();
+								return ResponseDTO.error(error.message, error.status);
 							}
 
 							set.status = 500;
@@ -61,13 +54,7 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 								error instanceof Error
 									? error.message
 									: "Something went wrong!";
-
-							return new generalDTO(
-								"error",
-								errorMessage,
-								set.status,
-								null,
-							).dataResult();
+							return ResponseDTO.error(errorMessage, set.status);
 						}
 					},
 					{
@@ -97,22 +84,15 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 							);
 
 							set.status = 200;
-							return new generalDTO(
-								"success",
+							return ResponseDTO.success(
 								"update ingredient successfully",
-								200,
+								set.status,
 								updatedIngredient,
-							).dataResult();
+							);
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
-
-								return new generalDTO(
-									"error",
-									error.message,
-									set.status,
-									null,
-								).dataResult();
+								return ResponseDTO.error(error.message, error.status);
 							}
 
 							set.status = 500;
@@ -120,13 +100,7 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 								error instanceof Error
 									? error.message
 									: "Something went wrong!";
-
-							return new generalDTO(
-								"error",
-								errorMessage,
-								set.status,
-								null,
-							).dataResult();
+							return ResponseDTO.error(errorMessage, set.status);
 						}
 					},
 					{
@@ -150,24 +124,17 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 							await ingredientService.delete(params.ingredientId);
 
 							set.status = 200;
-							return new generalDTO(
-								"success",
+							return ResponseDTO.success(
 								"delete ingredient successfully",
 								200,
 								{
 									message: "Ingredient deleted",
 								},
-							).dataResult();
+							);
 						} catch (error) {
 							if (error instanceof ApplicationError) {
 								set.status = error.status;
-
-								return new generalDTO(
-									"error",
-									error.message,
-									set.status,
-									null,
-								).dataResult();
+								return ResponseDTO.error(error.message, error.status);
 							}
 
 							set.status = 500;
@@ -175,13 +142,7 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 								error instanceof Error
 									? error.message
 									: "Something went wrong!";
-
-							return new generalDTO(
-								"error",
-								errorMessage,
-								set.status,
-								null,
-							).dataResult();
+							return ResponseDTO.error(errorMessage, set.status);
 						}
 					},
 					{
@@ -201,34 +162,21 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 				const allIngredients = await ingredientService.getAll();
 
 				set.status = 200;
-				return new generalDTO(
-					"success",
+				return ResponseDTO.success(
 					"get ingredients successfully",
 					200,
 					allIngredients,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -249,34 +197,21 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 				);
 
 				set.status = 200;
-				return new generalDTO(
-					"success",
+				return ResponseDTO.success(
 					"get ingredients by recipe id successfully",
 					200,
 					ingredients,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -301,34 +236,21 @@ export const ingredientRouter = new Elysia({ prefix: "/v1" })
 				);
 
 				set.status = 200;
-				return new generalDTO(
-					"success",
+				return ResponseDTO.success(
 					"get ingredient successfully",
-					200,
+					set.status,
 					ingredient,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{

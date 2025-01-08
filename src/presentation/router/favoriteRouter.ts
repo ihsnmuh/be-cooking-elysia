@@ -4,7 +4,7 @@ import {
 	ApplicationError,
 	AuthorizationError,
 } from "../../infrastructure/entity/error";
-import { generalDTO } from "../../application/dtos/generalDTO";
+import { ResponseDTO } from "../../application/dtos/responseDTO";
 
 export const favoriteRouter = new Elysia({ prefix: "/v1" })
 
@@ -25,34 +25,17 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 				const favorites = await favoriteService.getAllByUserId(user.id);
 
 				set.status = 200;
-				return new generalDTO(
-					"success",
-					"get favorites successfully",
-					200,
-					favorites,
-				).dataResult();
+				return ResponseDTO.success("get favorites sucessfully", 200, favorites);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -79,34 +62,21 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 				});
 
 				set.status = 201;
-				return new generalDTO(
-					"success",
+				return ResponseDTO.success(
 					"add favorite successfully",
-					200,
+					201,
 					newFavorite,
-				).dataResult();
+				);
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -134,31 +104,19 @@ export const favoriteRouter = new Elysia({ prefix: "/v1" })
 				await favoriteService.delete(params.favoriteId, user.id);
 				set.status = 200;
 
-				return new generalDTO("success", "delete favorites successfully", 200, {
+				return ResponseDTO.success("delete favorite successfully", 200, {
 					status: "success",
-				}).dataResult();
+				});
 			} catch (error) {
 				if (error instanceof ApplicationError) {
 					set.status = error.status;
-
-					return new generalDTO(
-						"error",
-						error.message,
-						set.status,
-						null,
-					).dataResult();
+					return ResponseDTO.error(error.message, error.status);
 				}
 
 				set.status = 500;
 				const errorMessage =
 					error instanceof Error ? error.message : "Something went wrong!";
-
-				return new generalDTO(
-					"error",
-					errorMessage,
-					set.status,
-					null,
-				).dataResult();
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
