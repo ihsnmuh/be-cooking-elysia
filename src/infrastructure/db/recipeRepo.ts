@@ -1,12 +1,15 @@
-import { Prisma, Recipe, type PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@prisma/client";
 import type {
 	IRecipe,
 	TCreateRecipeMerge,
+	TGetAllParams,
+	TSortOption,
 	TUpdateRecipeMerge,
 } from "../entity/interface";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../entity/type";
 import { DBError } from "../entity/error";
+import { NotFoundError } from "elysia";
 
 @injectable()
 export class RecipeRepository implements IRecipe {
@@ -16,9 +19,60 @@ export class RecipeRepository implements IRecipe {
 		this.prisma = prisma;
 	}
 
-	async getAll() {
+	private getSortOptions(
+		sort?: TSortOption,
+	): Prisma.RecipeOrderByWithRelationInput {
+		switch (sort) {
+			case "a-z":
+				return { title: "asc" };
+			case "z-a":
+				return { title: "desc" };
+			case "newest":
+				return { createdAt: "desc" };
+			case "latest":
+				return { updatedAt: "desc" };
+
+			default:
+				return { title: "asc" };
+		}
+	}
+
+	async getAll(params: TGetAllParams) {
+		const { page = 1, limit = 10, sort = "a-z", search } = params || {};
+
+		// Calculate skip value for pagination
+		const skip = (page - 1) * limit;
+
+		// sort list
+		const order = this.getSortOptions(sort);
+
+		const where = search
+			? {
+					OR: [
+						{
+							title: { contains: search, mode: Prisma.QueryMode.insensitive },
+						},
+						{
+							description: {
+								contains: search,
+								mode: Prisma.QueryMode.insensitive,
+							},
+						},
+					],
+				}
+			: {};
+
+		// Get total count for pagination
+		const total = await this.prisma.recipe.count({
+			where,
+		});
+
 		try {
 			const recipes = await this.prisma.recipe.findMany({
+				where,
+				skip,
+				take: +limit,
+				orderBy: order,
 				include: {
 					categories: {
 						select: {
@@ -54,7 +108,17 @@ export class RecipeRepository implements IRecipe {
 					},
 				},
 			});
-			return recipes;
+			return {
+				data: recipes,
+				metadata: {
+					total,
+					page,
+					limit,
+					totalPages: Math.ceil(total / limit),
+					hasNextPage: skip + recipes.length < total,
+					hasPreviousPage: page > 1,
+				},
+			};
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
@@ -64,12 +128,50 @@ export class RecipeRepository implements IRecipe {
 		}
 	}
 
-	async getAllByUserId(userId: string) {
+	async getAllByUserId(userId: string, params: TGetAllParams) {
+		const { page = 1, limit = 10, sort = "a-z", search } = params || {};
+
+		// Calculate skip value for pagination
+		const skip = (page - 1) * limit;
+
+		// sort list
+		const order = this.getSortOptions(sort);
+
+		const where = search
+			? {
+					AND: {
+						userId: userId,
+						OR: [
+							{
+								title: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+							{
+								description: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+						],
+					},
+				}
+			: {
+					userId: userId,
+				};
+
+		// Get total count for pagination
+		const total = await this.prisma.recipe.count({
+			where,
+		});
+
 		try {
 			const recipes = await this.prisma.recipe.findMany({
-				where: {
-					userId: userId,
-				},
+				where,
+				skip,
+				take: +limit,
+				orderBy: order,
 				include: {
 					categories: {
 						select: {
@@ -110,7 +212,17 @@ export class RecipeRepository implements IRecipe {
 				throw new DBError("Something went wrong while doing DB operation");
 			}
 
-			return recipes;
+			return {
+				data: recipes,
+				metadata: {
+					total,
+					page,
+					limit,
+					totalPages: Math.ceil(total / limit),
+					hasNextPage: skip + recipes.length < total,
+					hasPreviousPage: page > 1,
+				},
+			};
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
@@ -120,16 +232,58 @@ export class RecipeRepository implements IRecipe {
 		}
 	}
 
-	async getAllByCategoryId(categoryId: string) {
-		try {
-			const recipes = await this.prisma.recipe.findMany({
-				where: {
+	async getAllByCategoryId(categoryId: string, params: TGetAllParams) {
+		const { page = 1, limit = 10, sort = "a-z", search } = params || {};
+
+		// Calculate skip value for pagination
+		const skip = (page - 1) * limit;
+
+		// sort list
+		const order = this.getSortOptions(sort);
+
+		const where = search
+			? {
+					AND: {
+						categories: {
+							some: {
+								categoryId: categoryId,
+							},
+						},
+						OR: [
+							{
+								title: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+							{
+								description: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+						],
+					},
+				}
+			: {
 					categories: {
 						some: {
 							categoryId: categoryId,
 						},
 					},
-				},
+				};
+
+		// Get total count for pagination
+		const total = await this.prisma.recipe.count({
+			where,
+		});
+
+		try {
+			const recipes = await this.prisma.recipe.findMany({
+				where,
+				skip,
+				take: +limit,
+				orderBy: order,
 				include: {
 					categories: {
 						select: {
@@ -170,7 +324,17 @@ export class RecipeRepository implements IRecipe {
 				throw new DBError("Something went wrong while doing DB operation");
 			}
 
-			return recipes;
+			return {
+				data: recipes,
+				metadata: {
+					total,
+					page,
+					limit,
+					totalPages: Math.ceil(total / limit),
+					hasNextPage: skip + recipes.length < total,
+					hasPreviousPage: page > 1,
+				},
+			};
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
@@ -180,16 +344,58 @@ export class RecipeRepository implements IRecipe {
 		}
 	}
 
-	async getAllByIngredientId(ingredientId: string) {
-		try {
-			const recipes = await this.prisma.recipe.findMany({
-				where: {
+	async getAllByIngredientId(ingredientId: string, params: TGetAllParams) {
+		const { page = 1, limit = 10, sort = "a-z", search } = params || {};
+
+		// Calculate skip value for pagination
+		const skip = (page - 1) * limit;
+
+		// sort list
+		const order = this.getSortOptions(sort);
+
+		const where = search
+			? {
+					AND: {
+						ingredients: {
+							some: {
+								ingredientId: ingredientId,
+							},
+						},
+						OR: [
+							{
+								title: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+							{
+								description: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+						],
+					},
+				}
+			: {
 					ingredients: {
 						some: {
 							ingredientId: ingredientId,
 						},
 					},
-				},
+				};
+
+		// Get total count for pagination
+		const total = await this.prisma.recipe.count({
+			where,
+		});
+
+		try {
+			const recipes = await this.prisma.recipe.findMany({
+				where,
+				skip,
+				take: +limit,
+				orderBy: order,
 				include: {
 					categories: {
 						select: {
@@ -230,7 +436,17 @@ export class RecipeRepository implements IRecipe {
 				throw new DBError("Something went wrong while doing DB operation");
 			}
 
-			return recipes;
+			return {
+				data: recipes,
+				metadata: {
+					total,
+					page,
+					limit,
+					totalPages: Math.ceil(total / limit),
+					hasNextPage: skip + recipes.length < total,
+					hasPreviousPage: page > 1,
+				},
+			};
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
@@ -290,12 +506,11 @@ export class RecipeRepository implements IRecipe {
 			});
 
 			if (!recipe) {
-				throw new DBError("Recipe not found");
+				throw new NotFoundError("Recipe not found");
 			}
 
 			return recipe;
 		} catch (error) {
-			console.log("🚀 ~ RecipeRepository ~ getOne ~ error:", error);
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				throw new DBError("Error getting resource from DB");
 			}

@@ -3,6 +3,7 @@ import type { RecipeRepository } from "../../infrastructure/db/recipeRepo";
 import { TYPES } from "../../infrastructure/entity/type";
 import type {
 	TCreateRecipeMerge,
+	TGetAllParams,
 	TUpdateRecipeMerge,
 } from "../../infrastructure/entity/interface";
 
@@ -13,23 +14,29 @@ export class RecipeServices {
 		this.recipeRepo = recipeRepo;
 	}
 
-	async getAll() {
-		const allRecipes = await this.recipeRepo.getAll();
+	async getAll(params: TGetAllParams) {
+		const allRecipes = await this.recipeRepo.getAll(params);
 		return allRecipes;
 	}
 
-	async getAllByUserId(userId: string) {
-		const recipes = await this.recipeRepo.getAllByUserId(userId);
+	async getAllByUserId(userId: string, params: TGetAllParams) {
+		const recipes = await this.recipeRepo.getAllByUserId(userId, params);
 		return recipes;
 	}
 
-	async getAllByCategoryId(categoryId: string) {
-		const recipes = await this.recipeRepo.getAllByCategoryId(categoryId);
+	async getAllByCategoryId(categoryId: string, params: TGetAllParams) {
+		const recipes = await this.recipeRepo.getAllByCategoryId(
+			categoryId,
+			params,
+		);
 		return recipes;
 	}
 
-	async getAllByIngredientId(ingredientId: string) {
-		const recipes = await this.recipeRepo.getAllByIngredientId(ingredientId);
+	async getAllByIngredientId(ingredientId: string, params: TGetAllParams) {
+		const recipes = await this.recipeRepo.getAllByIngredientId(
+			ingredientId,
+			params,
+		);
 		return recipes;
 	}
 

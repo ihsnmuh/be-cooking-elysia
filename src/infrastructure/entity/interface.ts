@@ -29,6 +29,7 @@ export type TGetAllParams = Partial<{
 export type TCreateUser = Omit<User, "id" | "createdAt" | "updatedAt">;
 export type TUpdateUser = Partial<User>;
 
+export type TGetAllRecipe = { data: Recipe[]; metadata: TGetAllParams };
 export type TCreateRecipe = Omit<Recipe, "id" | "createdAt" | "updatedAt">;
 export type TCreateRecipeMerge = TCreateRecipe & {
 	categories: Pick<RecipeCategory, "id">[];
@@ -102,10 +103,19 @@ export interface ISession {
 
 //* IRecipe
 export interface IRecipe {
-	getAll: () => Promise<Recipe[]>;
-	getAllByUserId: (userId: string) => Promise<Recipe[]>;
-	getAllByCategoryId: (categoryId: string) => Promise<Recipe[]>;
-	getAllByIngredientId: (ingredientId: string) => Promise<Recipe[]>;
+	getAll: (params: TGetAllParams) => Promise<TGetAllRecipe>;
+	getAllByUserId: (
+		userId: string,
+		params: TGetAllParams,
+	) => Promise<TGetAllRecipe>;
+	getAllByCategoryId: (
+		categoryId: string,
+		params: TGetAllParams,
+	) => Promise<TGetAllRecipe>;
+	getAllByIngredientId: (
+		ingredientId: string,
+		params: TGetAllParams,
+	) => Promise<TGetAllRecipe>;
 	getOne: (id: string) => Promise<Recipe>;
 	create: (data: TCreateRecipeMerge) => Promise<Recipe>;
 	update: (id: string, data: TUpdateRecipeMerge) => Promise<Recipe>;

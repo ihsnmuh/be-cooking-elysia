@@ -1,6 +1,10 @@
 import Elysia, { t } from "elysia";
 import { authServices, recipeServices } from "../../application/instance";
-import { AuthorizationError } from "../../infrastructure/entity/error";
+import {
+	ApplicationError,
+	AuthorizationError,
+} from "../../infrastructure/entity/error";
+import { ResponseDTO } from "../../application/dtos/responseDTO";
 
 export const recipeRouter = new Elysia({ prefix: "/v1" })
 
@@ -9,6 +13,7 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 		app
 			// * Get session Id to see if user is logged in
 			.derive(async ({ headers }) => {
+				console.log("🚀 ~ .derive ~ headers:", headers);
 				const sessionId = headers.authorization?.split(" ")[1];
 				if (!sessionId) throw new AuthorizationError("SessionId not provided!");
 
@@ -40,15 +45,22 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 							instructions: body.instructions,
 						});
 
-						return recipe;
+						set.status = 201;
+						return ResponseDTO.success(
+							"create recipe successfully",
+							201,
+							recipe,
+						);
 					} catch (error) {
-						set.status = 500;
-
-						if (error instanceof Error) {
-							throw new Error(error.message);
+						if (error instanceof ApplicationError) {
+							set.status = error.status;
+							return ResponseDTO.error(error.message, error.status);
 						}
 
-						throw new Error("Something went wrong!");
+						set.status = 500;
+						const errorMessage =
+							error instanceof Error ? error.message : "Something went wrong!";
+						return ResponseDTO.error(errorMessage, set.status);
 					}
 				},
 				{
@@ -59,6 +71,7 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 
 					headers: t.Object({
 						authorization: t.String(),
+						"api-key": t.String(),
 					}),
 
 					body: t.Object({
@@ -109,15 +122,22 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 							instructions: body.instructions,
 						});
 
-						return recipe;
+						set.status = 200;
+						return ResponseDTO.success(
+							"update recipe successfully",
+							200,
+							recipe,
+						);
 					} catch (error) {
-						set.status = 500;
-
-						if (error instanceof Error) {
-							throw new Error(error.message);
+						if (error instanceof ApplicationError) {
+							set.status = error.status;
+							return ResponseDTO.error(error.message, error.status);
 						}
 
-						throw new Error("Something went wrong!");
+						set.status = 500;
+						const errorMessage =
+							error instanceof Error ? error.message : "Something went wrong!";
+						return ResponseDTO.error(errorMessage, set.status);
 					}
 				},
 				{
@@ -128,6 +148,11 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 
 					params: t.Object({
 						recipeId: t.String(),
+					}),
+
+					headers: t.Object({
+						authorization: t.String(),
+						"api-key": t.String(),
 					}),
 
 					body: t.Object({
@@ -172,15 +197,20 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 					try {
 						await recipeServices.delete(params.recipeId, user.id);
 
-						return { status: "success" };
+						set.status = 200;
+						return ResponseDTO.success("delete recipe successfully", 200, {
+							status: "success",
+						});
 					} catch (error) {
-						set.status = 500;
-
-						if (error instanceof Error) {
-							throw new Error(error.message);
+						if (error instanceof ApplicationError) {
+							set.status = error.status;
+							return ResponseDTO.error(error.message, error.status);
 						}
 
-						throw new Error("Something went wrong!");
+						set.status = 500;
+						const errorMessage =
+							error instanceof Error ? error.message : "Something went wrong!";
+						return ResponseDTO.error(errorMessage, set.status);
 					}
 				},
 				{
@@ -188,6 +218,11 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 						tags: ["Recipes"],
 						description: "Delete a recipe.",
 					},
+
+					headers: t.Object({
+						authorization: t.String(),
+						"api-key": t.String(),
+					}),
 
 					params: t.Object({
 						recipeId: t.String(),
@@ -199,19 +234,26 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 	// * Get all recipes
 	.get(
 		"/recipes",
-		async ({ set }) => {
+		async ({ set, query }) => {
 			try {
-				const allRecipes = await recipeServices.getAll();
+				const allRecipes = await recipeServices.getAll(query);
 
-				return allRecipes;
+				set.status = 200;
+				return ResponseDTO.success(
+					"get all recipes successfully",
+					200,
+					allRecipes,
+				);
 			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return ResponseDTO.error(error.message, error.status);
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -219,6 +261,22 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 				tags: ["Recipes"],
 				description: "Fetch all recipes.",
 			},
+
+			query: t.Optional(
+				t.Object({
+					page: t.Optional(t.Number()),
+					limit: t.Optional(t.Number()),
+					sort: t.Optional(
+						t.Union([
+							t.Literal("newest"),
+							t.Literal("latest"),
+							t.Literal("a-z"),
+							t.Literal("newest"),
+						]),
+					),
+					search: t.Optional(t.String()),
+				}),
+			),
 		},
 	)
 
@@ -227,17 +285,27 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 		"/recipes/user",
 		async ({ set, query }) => {
 			try {
-				const recipes = await recipeServices.getAllByUserId(query.userId);
+				const recipes = await recipeServices.getAllByUserId(
+					query.userId,
+					query,
+				);
 
-				return recipes;
+				set.status = 200;
+				return ResponseDTO.success(
+					"get all recipes by userId successfully",
+					200,
+					recipes,
+				);
 			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return ResponseDTO.error(error.message, error.status);
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -248,6 +316,17 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 
 			query: t.Object({
 				userId: t.String(),
+				page: t.Optional(t.Number()),
+				limit: t.Optional(t.Number()),
+				sort: t.Optional(
+					t.Union([
+						t.Literal("newest"),
+						t.Literal("latest"),
+						t.Literal("a-z"),
+						t.Literal("newest"),
+					]),
+				),
+				search: t.Optional(t.String()),
 			}),
 		},
 	)
@@ -259,17 +338,25 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 			try {
 				const recipes = await recipeServices.getAllByCategoryId(
 					query.categoryId,
+					query,
 				);
 
-				return recipes;
+				set.status = 200;
+				return ResponseDTO.success(
+					"get all recipes by category successfully",
+					200,
+					recipes,
+				);
 			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return ResponseDTO.error(error.message, error.status);
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -280,6 +367,17 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 
 			query: t.Object({
 				categoryId: t.String(),
+				page: t.Optional(t.Number()),
+				limit: t.Optional(t.Number()),
+				sort: t.Optional(
+					t.Union([
+						t.Literal("newest"),
+						t.Literal("latest"),
+						t.Literal("a-z"),
+						t.Literal("newest"),
+					]),
+				),
+				search: t.Optional(t.String()),
 			}),
 		},
 	)
@@ -291,17 +389,25 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 			try {
 				const recipes = await recipeServices.getAllByIngredientId(
 					query.ingredientId,
+					query,
 				);
 
-				return recipes;
+				set.status = 200;
+				return ResponseDTO.success(
+					"get all recipes by category successfully",
+					200,
+					recipes,
+				);
 			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return ResponseDTO.error(error.message, error.status);
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
@@ -312,6 +418,17 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 
 			query: t.Object({
 				ingredientId: t.String(),
+				page: t.Optional(t.Number()),
+				limit: t.Optional(t.Number()),
+				sort: t.Optional(
+					t.Union([
+						t.Literal("newest"),
+						t.Literal("latest"),
+						t.Literal("a-z"),
+						t.Literal("newest"),
+					]),
+				),
+				search: t.Optional(t.String()),
 			}),
 		},
 	)
@@ -323,15 +440,18 @@ export const recipeRouter = new Elysia({ prefix: "/v1" })
 			try {
 				const recipe = await recipeServices.getOne(params.recipeId);
 
-				return recipe;
+				set.status = 200;
+				return ResponseDTO.success("get recipe successfully", 200, recipe);
 			} catch (error) {
-				set.status = 500;
-
-				if (error instanceof Error) {
-					throw new Error(error.message);
+				if (error instanceof ApplicationError) {
+					set.status = error.status;
+					return ResponseDTO.error(error.message, error.status);
 				}
 
-				throw new Error("Something went wrong!");
+				set.status = 500;
+				const errorMessage =
+					error instanceof Error ? error.message : "Something went wrong!";
+				return ResponseDTO.error(errorMessage, set.status);
 			}
 		},
 		{
