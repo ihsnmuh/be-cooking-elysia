@@ -21,7 +21,7 @@ export class CategoryRepository implements ICategory {
 
 	private getSortOptions(
 		sort?: TSortOption,
-	): Prisma.UserOrderByWithRelationInput {
+	): Prisma.CategoryOrderByWithRelationInput {
 		switch (sort) {
 			case "a-z":
 				return { name: "asc" };
@@ -65,7 +65,7 @@ export class CategoryRepository implements ICategory {
 					},
 				},
 				skip,
-				take: limit,
+				take: +limit,
 				orderBy: order,
 			});
 			return {
