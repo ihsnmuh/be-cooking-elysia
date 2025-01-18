@@ -20,6 +20,7 @@
 		"reflect-metadata": "^0.2.2"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^9.4.0",
 		"bun-types": "latest",
 		"husky": "^9.1.7"
 	},
