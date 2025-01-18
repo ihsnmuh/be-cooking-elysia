@@ -86,6 +86,8 @@ const app = new Elysia()
 
 	.listen(3001);
 
+export const ApiApp = app;
+
 console.log(
 	`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );
